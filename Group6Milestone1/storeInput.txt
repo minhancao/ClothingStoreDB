@@ -1,0 +1,10 @@
+Kohl's	1.42
+Macy's	3.28
+H&M	4.65
+Forever 21	2.81
+Spencer's	1.14
+Express	1.74
+Urban Outfitters	2.44
+Uniqlo	3.7
+Old Navy	1.03
+JC Penny	2.32
