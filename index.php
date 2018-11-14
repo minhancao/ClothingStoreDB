@@ -76,6 +76,9 @@
     <h1>Discount Designer DB</h1>
 </div>
 
+<title>Discount Designer</title>
+
+
 <!-- Top navigation -->
 <div class="topnav">
 
