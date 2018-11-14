@@ -70,7 +70,7 @@
     <a href="#home" class="active">Home</a>
     <a href="https://www.google.com">Stores</a>
     <a href="#contact">Customers</a>
-    <a href="product.php">Product</a>
+    <a href="producttest.php">Product</a>
     <a href="#about">Top</a>
     <a href="#about">Bottom</a>
     <a href="#about">Shoe</a>
