@@ -89,6 +89,7 @@
     <a href="top.php">Top</a>
     <a href="bottom.php">Bottom</a>
     <a href="shoe.php">Shoe</a>
+    <input type="text" placeholder="Search for a product..">
 
 </div>
 
