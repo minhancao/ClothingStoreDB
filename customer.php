@@ -130,7 +130,7 @@ $dbname = "clothingdatabase";
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT CustomerID, Name, Address, Email FROM customer");
+    $stmt = $conn->prepare("SELECT CustomerID, firstName, lastName, Address, Email FROM customer");
     $stmt->execute();
 
     // set the resulting array to associative
