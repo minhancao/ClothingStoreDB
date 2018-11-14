@@ -8,6 +8,15 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        .header {
+            padding: 2px;
+            text-align: center;
+            background: #ce1023;
+            color: white;
+            font-size: 15px;
+        }
+
+
         .topnav {
             position: relative;
             overflow: hidden;
@@ -62,6 +71,10 @@
     </style>
 </head>
 <body>
+
+<div class="header">
+    <h1>Discount Designer DB</h1>
+</div>
 
 <!-- Top navigation -->
 <div class="topnav">
