@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<body>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -80,11 +82,11 @@
 <div class="topnav">
 
     <!-- Left-aligned links (default) -->
-    <a href="#home" class="active">Home</a>
+    <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
     <a href="product.php">Product</a>
-    <a href="top.php">Top</a>
+    <a href="top.php" class="active">Top</a>
     <a href="bottom.php">Bottom</a>
     <a href="shoe.php">Shoe</a>
 
@@ -92,10 +94,59 @@
 
 </div>
 
-<div style="padding-left:16px">
-    <h2>View clothing DB data</h2>
-    <p>(Admin View)</p>
-</div>
+
+<title>Tops</title>
+<h1>Top Data</h1>
+
+
+<?php
+echo "<table style='border: solid 1px black;'>";
+echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
+    <th>Name</th><th>Type</th><th>Hood</th><th>Size</th><th>Pocket</th>
+    <th>Zipper</th></tr>";
+
+class TableRows extends RecursiveIteratorIterator {
+    function __construct($it) {
+        parent::__construct($it, self::LEAVES_ONLY);
+    }
+
+    function current() {
+        return "<td style='width: 150px; border: 1px solid black;'>" . parent::current(). "</td>";
+    }
+
+    function beginChildren() {
+        echo "<tr>";
+    }
+
+    function endChildren() {
+        echo "</tr>" . "\n";
+    }
+}
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "mydatabase";
+
+try {
+    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $conn->prepare("SELECT * FROM product");
+    $stmt->execute();
+
+    // set the resulting array to associative
+    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+        echo $v;
+    }
+}
+catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+$conn = null;
+echo "</table>";
+?>
 
 </body>
 </html>

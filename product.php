@@ -83,12 +83,12 @@
 
     <!-- Left-aligned links (default) -->
     <a href="index.php">Home</a>
-    <a href="https://www.google.com">Stores</a>
-    <a href="#contact">Customers</a>
+    <a href="store.php">Stores</a>
+    <a href="customer.php">Customers</a>
     <a href="product.php" class="active">Product</a>
-    <a href="#about">Top</a>
-    <a href="#about">Bottom</a>
-    <a href="#about">Shoe</a>
+    <a href="top.php">Top</a>
+    <a href="bottom.php">Bottom</a>
+    <a href="shoe.php">Shoe</a>
 
 </div>
 
