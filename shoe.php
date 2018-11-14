@@ -125,12 +125,12 @@ class TableRows extends RecursiveIteratorIterator {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "mydatabase";
+$dbname = "clothingdatabase";
 
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM stores");
+    $stmt = $conn->prepare("SELECT * FROM product NATURAL JOIN shoe WHERE type LIKE 'shoe%'");
     $stmt->execute();
 
     // set the resulting array to associative

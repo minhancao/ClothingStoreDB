@@ -101,7 +101,7 @@
 
 <?php
 echo "<table style='border: solid 1px black;'>";
-echo "<tr><th>CusomerID</th><th>First Name</th><th>Last Name</th><th>Address</th>
+echo "<tr><th>CustomerID</th><th>First Name</th><th>Last Name</th><th>Address</th>
     <th>Email</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator {
@@ -125,12 +125,12 @@ class TableRows extends RecursiveIteratorIterator {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "mydatabase";
+$dbname = "clothingdatabase";
 
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM product");
+    $stmt = $conn->prepare("SELECT CustomerID, Name, Address, Email FROM customer");
     $stmt->execute();
 
     // set the resulting array to associative

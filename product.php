@@ -4,6 +4,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             margin: 0;
@@ -63,6 +64,29 @@
             font-size: 17px;
         }
 
+        form.search button {
+            float: right;
+            width: 20%;
+            padding:10px;
+            background: #ce1023;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+        }
+
+        form.search button:hover {
+            background: #ddd;
+        }
+
+        form.search::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+
         /* Responsive navigation menu (for mobile devices) */
         @media screen and (max-width: 600px) {
             .topnav a, .topnav-right {
@@ -96,9 +120,14 @@
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
-    <input type="text" placeholder="Search for a product..">
-
+    <!--<input type="text" placeholder="Search for a product..">-->
+    <form class="search" action="search.php" method="post" style="margin:auto;max-width:300px">
+        <input type="text" placeholder="Search.." name="query">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
 </div>
+
+
 
 </div>
 
@@ -133,7 +162,7 @@ class TableRows extends RecursiveIteratorIterator {
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "mydatabase";
+$dbname = "clothingdatabase";
 
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
