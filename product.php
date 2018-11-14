@@ -92,10 +92,10 @@
     <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
-    <a href="product.php" class="active">Product</a>
-    <a href="top.php">Top</a>
-    <a href="bottom.php">Bottom</a>
-    <a href="shoe.php">Shoe</a>
+    <a href="product.php" class="active">Products</a>
+    <a href="top.php">Tops</a>
+    <a href="bottom.php">Bottoms</a>
+    <a href="shoe.php">Shoes</a>
     <input type="text" placeholder="Search for a product..">
 
 </div>

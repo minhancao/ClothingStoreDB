@@ -85,10 +85,10 @@
     <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
-    <a href="product.php">Product</a>
-    <a href="top.php" class="active">Top</a>
-    <a href="bottom.php">Bottom</a>
-    <a href="shoe.php">Shoe</a>
+    <a href="product.php">Products</a>
+    <a href="top.php" class="active">Tops</a>
+    <a href="bottom.php">Bottoms</a>
+    <a href="shoe.php">Shoes</a>
 
 </div>
 
