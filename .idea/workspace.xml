@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6dea3a38-35b6-407c-914f-d8f38a221506" name="Default" comment="" />
+    <list default="true" id="6dea3a38-35b6-407c-914f-d8f38a221506" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/product.php" beforeDir="false" afterPath="$PROJECT_DIR$/product.php" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,8 +25,8 @@
       <file leaf-file-name="product.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/product.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="90" column="31" lean-forward="true" selection-start-line="90" selection-start-column="31" selection-end-line="90" selection-end-column="31" />
+            <state relative-caret-position="287">
+              <caret line="60" column="30" selection-start-line="60" selection-start-column="30" selection-end-line="60" selection-end-column="30" />
               <folding>
                 <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />
@@ -113,7 +115,6 @@
       <list>
         <option value="$PROJECT_DIR$/home.php" />
         <option value="$PROJECT_DIR$/producttest.php" />
-        <option value="$PROJECT_DIR$/product.php" />
         <option value="$PROJECT_DIR$/bottom.php" />
         <option value="$PROJECT_DIR$/stores.php" />
         <option value="$PROJECT_DIR$/shoe.php" />
@@ -121,6 +122,7 @@
         <option value="$PROJECT_DIR$/top.php" />
         <option value="$PROJECT_DIR$/store.php" />
         <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/product.php" />
       </list>
     </option>
   </component>
@@ -198,18 +200,18 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1542171742564</updated>
-      <workItem from="1542171743936" duration="10392000" />
+      <workItem from="1542171743936" duration="10725000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10392000" />
+    <option name="totallyTimeSpent" value="10725000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="762" y="0" width="781" height="830" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.22468793" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.22468793" />
       <window_info anchor="bottom" id="TODO" order="11" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
@@ -218,7 +220,7 @@
       <window_info anchor="bottom" id="Run" order="7" />
       <window_info anchor="bottom" id="Version Control" order="4" />
       <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="2" visible="true" weight="0.33285302" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="2" visible="true" weight="0.33285302" />
       <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
       <window_info id="Favorites" order="0" side_tool="true" />
       <window_info anchor="bottom" id="Find" order="6" />
@@ -311,8 +313,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/product.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="90" column="31" lean-forward="true" selection-start-line="90" selection-start-column="31" selection-end-line="90" selection-end-column="31" />
+        <state relative-caret-position="287">
+          <caret line="60" column="30" selection-start-line="60" selection-start-column="30" selection-end-line="60" selection-end-column="30" />
           <folding>
             <element signature="n#style#0;n#table#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#td#0;n#!!top" expanded="true" />

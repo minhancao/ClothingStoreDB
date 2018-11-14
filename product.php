@@ -56,6 +56,15 @@
             float: right;
         }
 
+        .topnav input[type=text] {
+            float: right;
+            padding: 14px 16px;
+            border: none;
+            margin-top: 8px;
+            margin-right: 16px;
+            font-size: 17px;
+        }
+
         /* Responsive navigation menu (for mobile devices) */
         @media screen and (max-width: 600px) {
             .topnav a, .topnav-right {
