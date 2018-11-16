@@ -89,6 +89,8 @@
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
+    <a href="transactions.php">Transactions</a>
+
 
 </div>
 
@@ -96,11 +98,14 @@
 
 
 <title>Customers</title>
-<h1>Customer Data</h1>
+<div style="padding-left:16px">
+    <h1>Customer Data</h1>
+</div>
 
 
 <?php
-echo "<table style='border: solid 1px black;'>";
+echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
+        <table style='border: solid 1px black;'></div>";
 echo "<tr><th>CustomerID</th><th>First Name</th><th>Last Name</th><th>Address</th>
     <th>Email</th></tr>";
 

@@ -89,6 +89,8 @@
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
+    <a href="transactions.php">Transactions</a>
+
 
 </div>
 
@@ -96,11 +98,15 @@
 
 
 <title>Stores</title>
-<h1>Store Data</h1>
+<div style="padding-left:16px">
+    <h1>Store Data</h1>
+</div>
+
 
 
 <?php
-echo "<table style='border: solid 1px black;'>";
+echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
+        <table style='border: solid 1px black;'></div>";
 echo "<tr><th>Store Name</th><th>popularity</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator {

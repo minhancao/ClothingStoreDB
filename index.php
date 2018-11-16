@@ -54,7 +54,6 @@
             float: right;
         }
 
-        /* Responsive navigation menu (for mobile devices) */
         @media screen and (max-width: 600px) {
             .topnav a, .topnav-right {
                 float: none;
@@ -83,13 +82,15 @@
 <div class="topnav">
 
     <!-- Left-aligned links (default) -->
-    <a href="#home" class="active">Home</a>
+    <a href="index.php" class="active">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
     <a href="product.php">Products</a>
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
+    <a href="transactions.php">Transactions</a>
+
 
 </div>
 

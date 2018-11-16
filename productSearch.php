@@ -120,9 +120,11 @@
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
-    <!--<input type="text" placeholder="Search for a product..">-->
-    <form class="search" action="search.php" method="post" style="margin:auto;max-width:300px">
+    <a href="transactions.php">Transactions</a>
+
+    <form class="search" action="productSearch.php" method="post" style="margin:auto;max-width:300px">
         <input type="text" placeholder="Search.." name="query">
+        <button type="submit"><i class="fa fa-search"></i></button>
     </form>
 </div>
 
@@ -132,7 +134,9 @@
 
 
 <title>Product</title>
-<h1>Product Data</h1>
+<div style="padding-left:16px">
+    <h1>Product Data</h1>
+</div>
 
 
 <?php
@@ -182,7 +186,10 @@ class TableRows extends RecursiveIteratorIterator
                 WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
                 OR (`name` LIKE '%" .$query. "%') OR (`type` LIKE '%" .$query. "%')) as T")->fetchColumn();
             if ($count > 0){
-                echo "<table style='border: solid 1px black;'>";
+
+                echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
+                        <table style='border: solid 1px black;'>
+                </div>";
                 echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
                 <th>Name</th><th>Type</th></tr>";
 
@@ -200,15 +207,23 @@ class TableRows extends RecursiveIteratorIterator
                 echo "</table>";
             }
             else  {
-                echo "<h2>No results for: '$query'</h2>";
-                echo  "<h3> It does not exist in the database at this time.</h3>";
+                echo "<div style=\"padding-left:16px\">
+                <h2>No results for: '$query'</h2>
+                </div>";
+                echo  "<div style=\"padding-left:16px\">
+                <h3>It does not exist in the database at this time.</h3>
+                </div>";
             }
 
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
     }
-    else
+    else {
+        echo "<div style=\"padding-left:16px\">
+                <h2>No results can be shown matching your criteria. Try being more specific.</h2>
+                </div>";
+    }
 
 
 ?>

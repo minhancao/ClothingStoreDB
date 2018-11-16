@@ -89,6 +89,8 @@
     <a href="top.php">Tops</a>
     <a href="bottom.php" class="active">Bottoms</a>
     <a href="shoe.php">Shoes</a>
+    <a href="transactions.php">Transactions</a>
+
 
 </div>
 
@@ -96,11 +98,14 @@
 
 
 <title>Bottoms</title>
-<h1>Bottom Data</h1>
+<div style="padding-left:16px">
+    <h1>Bottom Data</h1>
+</div>
 
 
 <?php
-echo "<table style='border: solid 1px black;'>";
+echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
+        <table style='border: solid 1px black;'></div>";
 echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
     <th>Name</th><th>Type</th><th>Waist Size</th><th>Length</th></tr>";
 
@@ -130,7 +135,7 @@ $dbname = "clothingdatabase";
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM product NATURAL JOIN bottom WHERE type LIKE 'bottom%'");
+    $stmt = $conn->prepare("SELECT * FROM product NATURAL JOIN bottom WHERE type LIKE 'bottom%' GROUP BY productID");
     $stmt->execute();
 
     // set the resulting array to associative

@@ -120,8 +120,9 @@
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
-    <!--<input type="text" placeholder="Search for a product..">-->
-    <form class="search" action="search.php" method="post" style="margin:auto;max-width:300px">
+    <a href="transactions.php">Transactions</a>
+
+    <form class="search" action="productSearch.php" method="post" style="margin:auto;max-width:300px">
         <input type="text" placeholder="Search.." name="query">
         <button type="submit"><i class="fa fa-search"></i></button>
     </form>
@@ -133,11 +134,15 @@
 
 
 <title>Product</title>
-<h1>Product Data</h1>
+<div style="padding-left:16px">
+    <h1>Product Data</h1>
+</div>
+
 
 
 <?php
-echo "<table style='border: solid 1px black;'>";
+echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
+        <table style='border: solid 1px black;'></div>";
 echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
     <th>Name</th><th>Type</th></tr>";
 

@@ -4,6 +4,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             margin: 0;
@@ -56,6 +57,36 @@
             float: right;
         }
 
+        .topnav input[type=text] {
+            float: right;
+            padding: 14px 16px;
+            border: 2px;
+            font-size: 17px;
+        }
+
+        form.search button {
+            float: right;
+            width: 20%;
+            padding:10px;
+            background: #ce1023;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+        }
+
+        form.search button:hover {
+            background: #ddd;
+        }
+
+        form.search::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+
         /* Responsive navigation menu (for mobile devices) */
         @media screen and (max-width: 600px) {
             .topnav a, .topnav-right {
@@ -86,29 +117,30 @@
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
     <a href="product.php">Products</a>
-    <a href="top.php" class="active">Tops</a>
+    <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
-    <a href="transactions.php">Transactions</a>
+    <a href="transactions.php"  class="active">Transactions</a>
 
 
 </div>
 
+
+
 </div>
 
 
-<title>Tops</title>
+<title>Product</title>
 <div style="padding-left:16px">
-    <h1>Top Data</h1>
+    <h1>Product Data</h1>
 </div>
+
 
 
 <?php
 echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
         <table style='border: solid 1px black;'></div>";
-echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
-    <th>Name</th><th>Type</th><th>Hood</th><th>Size</th><th>Pocket</th>
-    <th>Zipper</th></tr>";
+echo "<tr><th>TransactionID</th><th>Price</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator {
     function __construct($it) {
@@ -136,7 +168,7 @@ $dbname = "clothingdatabase";
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM product NATURAL JOIN top WHERE type LIKE 'top%' GROUP BY productID, size");
+    $stmt = $conn->prepare("SELECT * FROM transaction");
     $stmt->execute();
 
     // set the resulting array to associative
