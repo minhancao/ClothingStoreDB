@@ -84,12 +84,13 @@
     <!-- Left-aligned links (default) -->
     <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
-    <a href="customer.php" class="active">Customers</a>
+    <a href="customer.php" class="active">Customer</a>
     <a href="product.php">Products</a>
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php">Transactions</a>
+    <a href="cart.php">Cart</a>
 
 
 </div>

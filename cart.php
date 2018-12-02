@@ -116,12 +116,12 @@
     <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
-    <a href="product.php" class="active">Products</a>
+    <a href="product.php">Products</a>
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php">Transactions</a>
-    <a href="cart.php">Cart</a>
+    <a href="cart.php"  class="active">Cart</a>
 
 
     <form class="search" action="productSearch.php" method="post" style="margin:auto;max-width:300px">
@@ -137,7 +137,7 @@
 
 <title>Product</title>
 <div style="padding-left:16px">
-    <h1>Product Data</h1>
+    <h1>Cart</h1>
 </div>
 
 
@@ -166,66 +166,37 @@ class TableRows extends RecursiveIteratorIterator
     }
 }
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "clothingdatabase";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "clothingdatabase";
 
 
-    $query = $_POST['query'];
 
-    $min_length = 3;
 
-    if(strlen($query) >= $min_length) {
-
-        try {
-            $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare("SELECT * FROM product
-                WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
-                OR (`name` LIKE '%" .$query. "%') OR (`type` LIKE '%" .$query. "%')");
-            $count = $conn->query("SELECT count(*) FROM (SELECT * FROM product
-                WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
-                OR (`name` LIKE '%" .$query. "%') OR (`type` LIKE '%" .$query. "%')) as T")->fetchColumn();
-            if ($count > 0){
-
-                echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
+try {
+    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
                         <table style='border: solid 1px black;'>
                 </div>";
-                echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
-                <th>Name</th><th>Type</th></tr>";
+    $stmt = $conn->prepare("SELECT * FROM cart");
+    echo "<tr><th>CustomerID</th><th>ProductID</th><th>TransactionID</th></tr>";
 
-                $stmt->execute();
+    $stmt->execute();
 
-                // set the resulting array to associative
-                $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-                foreach (new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k => $v) {
-                    echo $v;
-                }
-
-                $conn = null;
-                echo "<h2>Search results for: '$query' </h2>";
-                echo "</table>";
-            }
-            else  {
-                echo "<div style=\"padding-left:16px\">
-                <h2>No results for: '$query'</h2>
-                </div>";
-                echo  "<div style=\"padding-left:16px\">
-                <h3>It does not exist in the database at this time.</h3>
-                </div>";
-            }
-
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
+    foreach (new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k => $v) {
+        echo $v;
     }
-    else {
-        echo "<div style=\"padding-left:16px\">
-                <h2>No results can be shown matching your criteria. Try being more specific.</h2>
-                </div>";
-    }
+
+    $conn = null;
+    echo "</table>";
+
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
 
 
 ?>

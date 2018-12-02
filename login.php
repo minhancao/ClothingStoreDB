@@ -67,20 +67,34 @@
                 transform: none;
             }
         }
-
-        .registerbtn {
-            background-color: #ce1023;
-            color: white;
-            padding: 16px 20px;
-            margin: 8px 0;
-            border: none;
-            cursor: pointer;
-            width: 15%;
-            opacity: 0.9;
+        * {
+            box-sizing: border-box;
         }
 
-        .registerbtn:hover {
-            opacity: 1;
+        /* Add padding to containers */
+        .container {
+            padding: 16px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+        input[type=text]:focus, input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
         }
 
         .loginbtn {
@@ -90,7 +104,7 @@
             margin: 8px 0;
             border: none;
             cursor: pointer;
-            width: 15%;
+            width: 100%;
             opacity: 0.9;
         }
 
@@ -98,6 +112,14 @@
             opacity: 1;
         }
 
+        a {
+            color: dodgerblue;
+        }
+
+        .signup {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -109,10 +131,8 @@
 <title>Discount Designer</title>
 
 
-<!-- Top navigation -->
 <div class="topnav">
 
-    <!-- Left-aligned links (default) -->
     <a href="index.php" class="active">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
@@ -120,18 +140,38 @@
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
-    <a href="transactions.php">Transactions</a>
-    <a href="cart.php">Cart</a>
+    <a href="cart.php">Transactions</a>
+
 
 </div>
 
 </div>
 
-<div style="padding-left:16px">
-    <h2>Login or register to proceed</h2>
-    <button type="submit" class="registerbtn" onclick="location='register.php'">Register</button>
-    <button type="submit" class="loginbtn" onclick="location='login.php'">Login</button>
-</div>
 
+<form action="/login.php">
+    <div class="container">
+        <h1>Login</h1>
+        <hr>
+
+        <label for="customerID"><b>Customer ID</b></label>
+        <input type="text" placeholder="Enter customerID" name="first" required>
+
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" required>
+
+        <hr>
+
+        <button type="submit" class="loginbtn">Login</button>
+    </div>
+
+    <div class="container signup">
+        <p>Don't have an account? <a href="register.php">Sign up</a>.</p>
+    </div>
+</form>
+
+
+<?php
+
+?>
 </body>
 </html>

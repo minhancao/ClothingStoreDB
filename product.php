@@ -121,6 +121,8 @@
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php">Transactions</a>
+    <a href="cart.php">Cart</a>
+
 
     <form class="search" action="productSearch.php" method="post" style="margin:auto;max-width:300px">
         <input type="text" placeholder="Search.." name="query">
@@ -141,10 +143,11 @@
 
 
 <?php
-echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
-        <table style='border: solid 1px black;'></div>";
-echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
-    <th>Name</th><th>Type</th></tr>";
+//echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
+  //      <table style='border: solid 1px black;'></div>";
+//echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
+  //  <th>Name</th><th>Type</th><th>Purchase</th></tr>";
+
 
 class TableRows extends RecursiveIteratorIterator {
     function __construct($it) {
@@ -170,17 +173,50 @@ $password = "";
 $dbname = "clothingdatabase";
 
 try {
-    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM product");
-    $stmt->execute();
+    //$conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+    //$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //$stmt = $conn->prepare("SELECT * FROM product");
+    //$stmt->execute();
 
-    // set the resulting array to associative
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    //$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
-        echo $v;
+    //foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+        //echo $v;
+    //}
+    $db = new mysqli($servername, $username, $password, $dbname);
+
+    $sql = "SELECT * from product";
+    if(!$result = $db->query($sql)){
+        die('There was an error running the query [' . $db->error . ']');
     }
+    echo "
+<table class='table'>
+    <thead>
+        <tr>";
+
+    while ($finfo = $result->fetch_field()) {
+        echo "
+        <th>" . $finfo->name . "</th>";
+    }
+    echo "
+        </tr>
+    </thead>
+    <tbody>";
+    while($row = $result->fetch_assoc()){
+        echo "<tr class='info'>
+                <td>" . $row['productID'] . "</td>
+                <td>" . $row['color'] . "</td>
+                <td>" . $row['price'] . "</td>
+                <td>" . $row['brandName'] . "</td>
+                <td>" . $row['name'] . "</td>
+                <td>" . $row['type'] . "</td>
+                <td><a class='btn btn-primary btn-lg'  href='purchase.php?id=".$row['productID']."'>Purchase</a></td>
+                                </td>
+                                   </tr>";
+    }
+    echo "
+    </tbody>
+</table>";
 }
 catch(PDOException $e) {
     echo "Error: " . $e->getMessage();

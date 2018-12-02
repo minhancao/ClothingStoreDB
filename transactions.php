@@ -121,6 +121,7 @@
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php"  class="active">Transactions</a>
+    <a href="cart.php">Cart</a>
 
 
 </div>

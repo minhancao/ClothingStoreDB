@@ -90,6 +90,7 @@
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php">Transactions</a>
+    <a href="cart.php">Cart</a>
 
 
 </div>
