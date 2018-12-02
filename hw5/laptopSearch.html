@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<input type="text" placeholder="Minimum speed" id="speed">
+<input type="text" placeholder="Mimimum RAM" id="ram">
+<input type="text" placeholder="Minimum HD size" id="hd">
+<input type="text" placeholder="Minimum Screen" id="screen">
+<button onclick="myFunction()" type="submit">Submit</button>
+
+<script type="text/javascript">
+    function laptopSearch() {
+        var speed = document.getElementById("speed").value;
+        var ram = document.getElementById("ram").value;
+        var hd = document.getElementById("hd").value;
+        var screen = document.getElementById("screen").value;
+
+        var mysql = require('mysql');
+
+        var con = mysql.createConnection({
+            host: "localhost",
+            user: "root",
+            password: "password",
+            database: "store"
+        });
+        con.connect(function(err) {
+            if (err) throw err;
+            console.log("Connection successful");
+        });
+
+        var sql = "SELECT * FROM laptop, product WHERE speed >= ? AND ram >= ? AND hd >= ? AND screen >= ? AND laptop.model=product.model";
+        con.query(sql, [speed, ram, hd, screen], function (err, rows, fields) {
+            if (err) throw err;
+            console.log(rows);
+        });
+
+    }
+</script>
+
+</body>
+</html>
