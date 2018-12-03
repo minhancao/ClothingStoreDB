@@ -1,3 +1,9 @@
+<?php
+// Start the session
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html>
 <body>
@@ -105,8 +111,6 @@
 
 
 <?php
-// Start the session
-session_start();
 
 echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
         <table style='border: solid 1px black;'></div>";
@@ -132,9 +136,11 @@ class TableRows extends RecursiveIteratorIterator {
 }
 
 
-// Set session variables
-$_SESSION['customerID'] = $_POST['first'];
-$_SESSION['password'] = $_POST['psw'];
+if (isset($_POST['first']) && isset($_POST['psw'])) {
+        $_SESSION['customerID'] = $_POST['first'];
+        $_SESSION['password'] = $_POST['psw'];
+        $_SESSION["logged_in"] = 1;
+    }
 
 $servername = "localhost";
 $username = "root";
