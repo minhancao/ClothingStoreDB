@@ -183,17 +183,17 @@ class TableRows extends RecursiveIteratorIterator
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $stmt = $conn->prepare("SELECT * FROM product
                 WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
-                OR (`name` LIKE '%" .$query. "%') OR (`type` LIKE '%" .$query. "%')");
+                OR (`name` LIKE '%" .$query. "%') OR (`count` LIKE '%" .$query. "%')");
             $count = $conn->query("SELECT count(*) FROM (SELECT * FROM product
                 WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
-                OR (`name` LIKE '%" .$query. "%') OR (`type` LIKE '%" .$query. "%')) as T")->fetchColumn();
+                OR (`name` LIKE '%" .$query. "%') OR (`count` LIKE '%" .$query. "%')) as T")->fetchColumn();
             if ($count > 0){
 
                 echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
                         <table style='border: solid 1px black;'>
                 </div>";
                 echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
-                <th>Name</th><th>Type</th></tr>";
+                <th>Name</th><th>Count</th></tr>";
 
                 $stmt->execute();
 

@@ -209,7 +209,7 @@ try {
                 <td>" . $row['price'] . "</td>
                 <td>" . $row['brandName'] . "</td>
                 <td>" . $row['name'] . "</td>
-                <td>" . $row['type'] . "</td>
+                <td>" . $row['count'] . "</td>
                 <td><a class='btn btn-primary btn-lg'  href='purchase.php?id=".$row['productID']."'>Purchase</a></td>
                                 </td>
                                    </tr>";

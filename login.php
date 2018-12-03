@@ -1,3 +1,8 @@
+<?php
+// Start the session
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -148,7 +153,7 @@
 </div>
 
 
-<form action="/login.php">
+<form action="customer.php" method="post">
     <div class="container">
         <h1>Login</h1>
         <hr>
@@ -169,9 +174,5 @@
     </div>
 </form>
 
-
-<?php
-
-?>
 </body>
 </html>

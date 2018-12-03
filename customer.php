@@ -105,6 +105,9 @@
 
 
 <?php
+// Start the session
+session_start();
+
 echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
         <table style='border: solid 1px black;'></div>";
 echo "<tr><th>CustomerID</th><th>First Name</th><th>Last Name</th><th>Address</th>
@@ -128,6 +131,11 @@ class TableRows extends RecursiveIteratorIterator {
     }
 }
 
+
+// Set session variables
+$_SESSION['customerID'] = $_POST['first'];
+$_SESSION['password'] = $_POST['psw'];
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -136,7 +144,7 @@ $dbname = "clothingdatabase";
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT CustomerID, firstName, lastName, Address, Email FROM customer");
+    $stmt = $conn->prepare("SELECT customerID, firstName, lastName, Address, Email FROM customer WHERE customerID = " . $_SESSION["customerID"] . " AND password = '" . $_SESSION["password"] . "';");
     $stmt->execute();
 
     // set the resulting array to associative
