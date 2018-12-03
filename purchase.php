@@ -178,12 +178,12 @@ $query = $_GET['id'];
     try {
         $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt1 = $conn->prepare("INSERT INTO cart VALUES ('".rand(100000,999999)."', ' .$query. ', '".rand(100000,999999)."')");
+        $stmt1 = $conn->prepare("INSERT INTO cart VALUES (431178, 110446, 163446)");
             echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
                         <table style='border: solid 1px black;'>
                 </div>";
         $stmt = $conn->prepare("SELECT * FROM cart");
-            echo "<tr><th>CustomerID</th><th>ProductID</th><th>TransactionID</th></tr>";
+            echo "<tr><th>CustomerID</th><th>TransactionID</th><th>ProductID</th></tr>";
 
             $stmt1->execute();
 
