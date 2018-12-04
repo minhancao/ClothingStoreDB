@@ -108,7 +108,7 @@
 echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
         <table style='border: solid 1px black;'></div>";
 echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
-    <th>Name</th><th>Type</th><th>Waist Size</th><th>Length</th></tr>";
+    <th>Name</th><th>Count</th><th>Waist Size</th><th>Length</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator {
     function __construct($it) {
@@ -136,7 +136,7 @@ $dbname = "clothingdatabase";
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM product NATURAL JOIN bottom WHERE type LIKE 'bottom%' GROUP BY productID");
+    $stmt = $conn->prepare("SELECT * FROM Product p1 INNER JOIN Bottom t1 ON t1.productID = p1.productID");
     $stmt->execute();
 
     // set the resulting array to associative

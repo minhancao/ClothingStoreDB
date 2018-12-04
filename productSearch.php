@@ -198,11 +198,20 @@ class TableRows extends RecursiveIteratorIterator
                 $stmt->execute();
 
                 // set the resulting array to associative
-                $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                foreach (new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k => $v) {
-                    echo $v;
-                }
+                foreach($result as $row) {
+                echo "<tr class='info'>
+                    <td>" . $row['productID'] . "</td>
+                    <td>" . $row['color'] . "</td>
+                    <td>" . $row['price'] . "</td>
+                    <td>" . $row['brandName'] . "</td>
+                    <td>" . $row['name'] . "</td>
+                    <td>" . $row['count'] . "</td>
+                    <td><a class='btn btn-primary btn-lg'  href='purchase.php?id=".$row['productID']."'>Purchase</a></td>
+                                    </td>
+                                       </tr>";
+                    }
 
                 $conn = null;
                 echo "<h2>Search results for: '$query' </h2>";

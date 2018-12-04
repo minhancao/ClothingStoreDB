@@ -157,7 +157,7 @@ session_start();
 </div>
 
 
-<title>Cart</title>
+<title>DeleteItemCart</title>
 <div style="padding-left:16px">
     <h1>Cart</h1>
 </div>
@@ -193,52 +193,24 @@ $username = "root";
 $password = "";
 $dbname = "clothingdatabase";
 
+$deleteItem = $_GET['id'];
 
-$totalPrice = 0;
 
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
-                        <table style='border: solid 1px black;'>
-                </div>";
-    $stmt = $conn->prepare("SELECT c1.customerID, c1.transactionID, c1.productID, p1.brandName, p1.name, p1.color, p1.price FROM ((cart c1 INNER JOIN product p1 ON c1.productID = p1.productID) INNER JOIN customer cus1 ON c1.customerID = cus1.customerID) WHERE cus1.customerID = " . $_SESSION["customerID"] . " AND cus1.password = '" . $_SESSION["password"] . "';");
-    echo "<tr><th>CustomerID</th><th>TransactionID</th><th>ProductID</th><th>Brand Name</th><th>Name</th><th>Color</th><th>Price</th></tr>";
+    $stmt = $conn->prepare("DELETE FROM Cart WHERE customerID = " . $_SESSION["customerID"] . " AND productID = $deleteItem;");
 
     $stmt->execute();
 
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    /*foreach (new TableRows(new RecursiveArrayIterator($result)) as $k => $v) {
-        echo $v;
-    }*/
-
-    foreach($result as $row) {
-      echo "<tr class='info'>
-                <td>" . $row['customerID'] . "</td>
-                <td>" . $row['transactionID'] . "</td>
-                <td>" . $row['productID'] . "</td>
-                <td>" . $row['brandName'] . "</td>
-                <td>" . $row['name'] . "</td>
-                <td>" . $row['color'] . "</td>
-                <td>" . $row['price'] . "</td>
-                <td><a class='deletebtn'  href='deleteItemCart.php?id=".$row['productID']."'>Delete</a></td>
-                                </td>
-                                   </tr>";
-        $totalPrice = $totalPrice + $row['price'];
-    }
-
     $conn = null;
-    echo "</table>";
 
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
-    echo '<br></br>';
-    echo "Total Price: $$totalPrice";
-    echo '<br></br>';
-    echo '<a href="finalizePurchase.php?id='.$totalPrice.'" class="registerbtn">Finalize Purchase</a>';   
-
+    echo "Product $deleteItem deleted from cart.";
+    echo "<br></br>";
+    echo '<a href="cart.php" class="registerbtn">Return To Cart</a>';   
 
 ?>
 

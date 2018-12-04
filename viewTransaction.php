@@ -1,6 +1,7 @@
 <?php
 // Start the session
 session_start();
+
 ?>
 
 <!DOCTYPE html>
@@ -69,10 +70,10 @@ session_start();
             font-size: 17px;
         }
 
-        .registerbtn {
+        .deletebtn {
             background-color: #ce1023;
             color: white;
-            padding: 16px 20px;
+            padding: 1px 3px;
             margin: 8px 0;
             border: none;
             cursor: pointer;
@@ -80,10 +81,10 @@ session_start();
             opacity: 0.9;
         }
 
-        .deletebtn {
+        .registerbtn {
             background-color: #ce1023;
             color: white;
-            padding: 1px 3px;
+            padding: 16px 20px;
             margin: 8px 0;
             border: none;
             cursor: pointer;
@@ -130,7 +131,7 @@ session_start();
         }
     </style>
 </head>
-</body>
+<body>
 
 <div class="header">
     <h1>Discount Designer DB</h1>
@@ -147,43 +148,43 @@ session_start();
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
-    <a href="transactions.php">Transactions</a>
-    <a href="cart.php"  class="active">Cart</a>
-
-</div>
-
+    <a href="transactions.php"  class="active">Transactions</a>
+    <a href="cart.php">Cart</a>
 
 
 </div>
 
 
-<title>Cart</title>
+
+</div>
+
+
+<title>ViewTransaction</title>
 <div style="padding-left:16px">
-    <h1>Cart</h1>
+    <h1>Product Data</h1>
 </div>
+
 
 
 <?php
+echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
+        <table style='border: solid 1px black;'></div>";
+echo "<tr><th>TransactionID</th><th>ProductID</th><th>Brand Name</th><th>Name</th><th>Color</th><th>Price</th></tr>";
 
-class TableRows extends RecursiveIteratorIterator
-{
-    function __construct($it)
-    {
+class TableRows extends RecursiveIteratorIterator {
+    function __construct($it) {
         parent::__construct($it, self::LEAVES_ONLY);
     }
 
-    function current()
-    {
-        return "<td style='width: 150px; border: 1px solid black;'>" . parent::current() . "</td>";
+    function current() {
+        return "<td style='width: 150px; border: 1px solid black;'>" . parent::current(). "</td>";
     }
 
-    function beginChildren()
-    {
+    function beginChildren() {
         echo "<tr>";
     }
 
-    function endChildren()
-    {
+    function endChildren() {
         echo "</tr>" . "\n";
     }
 }
@@ -193,20 +194,17 @@ $username = "root";
 $password = "";
 $dbname = "clothingdatabase";
 
-
+$transID = $_GET['id'];
 $totalPrice = 0;
 
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
-                        <table style='border: solid 1px black;'>
-                </div>";
-    $stmt = $conn->prepare("SELECT c1.customerID, c1.transactionID, c1.productID, p1.brandName, p1.name, p1.color, p1.price FROM ((cart c1 INNER JOIN product p1 ON c1.productID = p1.productID) INNER JOIN customer cus1 ON c1.customerID = cus1.customerID) WHERE cus1.customerID = " . $_SESSION["customerID"] . " AND cus1.password = '" . $_SESSION["password"] . "';");
-    echo "<tr><th>CustomerID</th><th>TransactionID</th><th>ProductID</th><th>Brand Name</th><th>Name</th><th>Color</th><th>Price</th></tr>";
 
+    $stmt = $conn->prepare("SELECT pur1.transactionID, p1.productID, p1.brandName, p1.name, p1.color, p1.price FROM (purchases pur1 INNER JOIN product p1 ON pur1.productID = p1.productID) WHERE pur1.transactionID = " . $transID . "");
     $stmt->execute();
 
+    // set the resulting array to associative
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     /*foreach (new TableRows(new RecursiveArrayIterator($result)) as $k => $v) {
@@ -215,31 +213,32 @@ try {
 
     foreach($result as $row) {
       echo "<tr class='info'>
-                <td>" . $row['customerID'] . "</td>
                 <td>" . $row['transactionID'] . "</td>
                 <td>" . $row['productID'] . "</td>
                 <td>" . $row['brandName'] . "</td>
                 <td>" . $row['name'] . "</td>
                 <td>" . $row['color'] . "</td>
-                <td>" . $row['price'] . "</td>
-                <td><a class='deletebtn'  href='deleteItemCart.php?id=".$row['productID']."'>Delete</a></td>
-                                </td>
-                                   </tr>";
-        $totalPrice = $totalPrice + $row['price'];
+                <td>" . $row['price'] . "</td>";
     }
 
-    $conn = null;
-    echo "</table>";
-
-} catch (PDOException $e) {
+    $stmt1 = $conn->prepare("SELECT price FROM transaction WHERE transactionID = " . $transID . "");
+    $stmt1->execute();
+    $result2 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    foreach($result2 as $row2)
+    {
+        $totalPrice = $row2['price'];
+    }
+}
+catch(PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
+$conn = null;
+echo "</table>";
+
     echo '<br></br>';
     echo "Total Price: $$totalPrice";
     echo '<br></br>';
-    echo '<a href="finalizePurchase.php?id='.$totalPrice.'" class="registerbtn">Finalize Purchase</a>';   
-
-
+    echo '<a href="transactions.php" class="registerbtn">Back To Transactions</a>';   
 ?>
 
 </body>

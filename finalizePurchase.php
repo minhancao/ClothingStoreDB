@@ -80,17 +80,6 @@ session_start();
             opacity: 0.9;
         }
 
-        .deletebtn {
-            background-color: #ce1023;
-            color: white;
-            padding: 1px 3px;
-            margin: 8px 0;
-            border: none;
-            cursor: pointer;
-            width: 15%;
-            opacity: 0.9;
-        }
-
         form.search button {
             float: right;
             width: 20%;
@@ -157,7 +146,7 @@ session_start();
 </div>
 
 
-<title>Cart</title>
+<title>FinalizePurchase</title>
 <div style="padding-left:16px">
     <h1>Cart</h1>
 </div>
@@ -194,51 +183,53 @@ $password = "";
 $dbname = "clothingdatabase";
 
 
-$totalPrice = 0;
+$totalPrice = $_GET['id'];
 
-try {
+if(isset($_SESSION["currentTransactionID"]))
+{
+    try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
-                        <table style='border: solid 1px black;'>
-                </div>";
+
+    $stmt1 = $conn->prepare("INSERT INTO transaction VALUES(" . $_SESSION["currentTransactionID"] . ", " . $totalPrice .")");
+    $stmt2 = $conn->prepare("INSERT INTO CustomerPurchases VALUES(" . $_SESSION["customerID"] . ", " . $_SESSION["currentTransactionID"] .")");
+
+    $stmt1->execute();
+    $stmt2->execute();
+
     $stmt = $conn->prepare("SELECT c1.customerID, c1.transactionID, c1.productID, p1.brandName, p1.name, p1.color, p1.price FROM ((cart c1 INNER JOIN product p1 ON c1.productID = p1.productID) INNER JOIN customer cus1 ON c1.customerID = cus1.customerID) WHERE cus1.customerID = " . $_SESSION["customerID"] . " AND cus1.password = '" . $_SESSION["password"] . "';");
-    echo "<tr><th>CustomerID</th><th>TransactionID</th><th>ProductID</th><th>Brand Name</th><th>Name</th><th>Color</th><th>Price</th></tr>";
 
     $stmt->execute();
-
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    /*foreach (new TableRows(new RecursiveArrayIterator($result)) as $k => $v) {
-        echo $v;
-    }*/
-
     foreach($result as $row) {
-      echo "<tr class='info'>
-                <td>" . $row['customerID'] . "</td>
-                <td>" . $row['transactionID'] . "</td>
-                <td>" . $row['productID'] . "</td>
-                <td>" . $row['brandName'] . "</td>
-                <td>" . $row['name'] . "</td>
-                <td>" . $row['color'] . "</td>
-                <td>" . $row['price'] . "</td>
-                <td><a class='deletebtn'  href='deleteItemCart.php?id=".$row['productID']."'>Delete</a></td>
-                                </td>
-                                   </tr>";
-        $totalPrice = $totalPrice + $row['price'];
+      $stmt3 = $conn->prepare("INSERT INTO Purchases VALUES(" . $_SESSION["currentTransactionID"] . ", " . $row['productID'] . ")");
+      $stmt3->execute();
+      $stmt4 = $conn->prepare("UPDATE Product SET count = count - 1 WHERE productID = " . $row['productID'] . "");
+      $stmt4->execute();
+      $stmt5 = $conn->prepare("DELETE FROM Cart WHERE customerID = " . $_SESSION["customerID"] . " AND transactionID = " . $_SESSION["currentTransactionID"] . " AND productID = " . $row['productID'] . "");
+      $stmt5->execute();
     }
 
+
     $conn = null;
-    echo "</table>";
+    unset($_SESSION["currentTransactionID"]);
 
-} catch (PDOException $e) {
+        } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
+        }
+    echo '<br></br>';
+    echo "<h2>Transaction successfully processed.</h2>";
+    echo '<br></br>';
+    echo '<a href="transactions.php" class="registerbtn">Go to Transactions</a>';  
 }
-    echo '<br></br>';
-    echo "Total Price: $$totalPrice";
-    echo '<br></br>';
-    echo '<a href="finalizePurchase.php?id='.$totalPrice.'" class="registerbtn">Finalize Purchase</a>';   
 
+else 
+{
+    header("Location: cart.php");
+}
+
+ 
 
 ?>
 
