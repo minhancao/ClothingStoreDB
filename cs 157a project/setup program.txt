@@ -1,0 +1,18 @@
+Installing XAMPP
+1) go to https://www.apachefriends.org/download.html and download version "7.2.12 / PHP 7.2.12" for Windows
+2) set up xampp
+3) start apache and mysql on xampp control panel
+
+Setting up Database...
+1) open a web browser and go to localhost/phpmyadmin/server_import.php
+2) import in createDB.sql and click go
+3) copy and paste all the input txt files into C:\xampp\mysql\data\clothingdatabase
+4) import in loadDB.sql and click go
+5) import in serverSideCode.sql and click go
+
+Running the application...
+1) Open a new tab or window on web browser and go to http://localhost/ClothingStoreDB/
+MAKE SURE APACHE AND MYSQL SERVER IS RUNNING ON XAMPP CONTROL PANEL!!
+
+
+
