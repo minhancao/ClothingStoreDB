@@ -1,3 +1,5 @@
+USE ClothingDatabase;
+
 DELIMITER //
 CREATE PROCEDURE decrementCountInProduct
 (IN p_productID INT)
