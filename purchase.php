@@ -148,6 +148,7 @@ session_start();
 
 
 <?php
+session_start();
 
 class TableRows extends RecursiveIteratorIterator
 {
@@ -181,9 +182,16 @@ $dbname = "clothingdatabase";
 $query = $_GET['id'];
 $newTransactionID = 0;
 
+
     try {
         $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
+                        <table style='border: solid 1px black;'>
+                </div>";
+        $stmt = $conn->prepare("SELECT * FROM cart");
+            echo "<tr><th>CustomerID</th><th>TransactionID</th><th>ProductID</th></tr>";
 
         if(!isset($_SESSION["currentTransactionID"]))
         {
