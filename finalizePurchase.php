@@ -191,11 +191,12 @@ if(isset($_SESSION["currentTransactionID"]))
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt1 = $conn->prepare("INSERT INTO transaction VALUES(" . $_SESSION["currentTransactionID"] . ", " . $totalPrice .")");
+   /* $stmt1 = $conn->prepare("INSERT INTO transaction VALUES(" . $_SESSION["currentTransactionID"] . ", " . $totalPrice .")");
     $stmt2 = $conn->prepare("INSERT INTO CustomerPurchases VALUES(" . $_SESSION["customerID"] . ", " . $_SESSION["currentTransactionID"] .")");
 
     $stmt1->execute();
-    $stmt2->execute();
+    $stmt2->execute();*/
+
 
     $stmt = $conn->prepare("SELECT c1.customerID, c1.transactionID, c1.productID, p1.brandName, p1.name, p1.color, p1.price FROM ((cart c1 INNER JOIN product p1 ON c1.productID = p1.productID) INNER JOIN customer cus1 ON c1.customerID = cus1.customerID) WHERE cus1.customerID = " . $_SESSION["customerID"] . " AND cus1.password = '" . $_SESSION["password"] . "';");
 
@@ -203,13 +204,16 @@ if(isset($_SESSION["currentTransactionID"]))
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach($result as $row) {
-      $stmt3 = $conn->prepare("INSERT INTO Purchases VALUES(" . $_SESSION["currentTransactionID"] . ", " . $row['productID'] . ")");
-      $stmt3->execute();
-      $stmt4 = $conn->prepare("UPDATE Product SET count = count - 1 WHERE productID = " . $row['productID'] . "");
+      /*$stmt3 = $conn->prepare("INSERT INTO Purchases VALUES(" . $_SESSION["currentTransactionID"] . ", " . $row['productID'] . ")");
+      $stmt3->execute();*/
+      $stmt4 = $conn->prepare("CALL decrementCountInProduct(" . $row['productID'] . ")");
       $stmt4->execute();
-      $stmt5 = $conn->prepare("DELETE FROM Cart WHERE customerID = " . $_SESSION["customerID"] . " AND transactionID = " . $_SESSION["currentTransactionID"] . " AND productID = " . $row['productID'] . "");
-      $stmt5->execute();
+     /* $stmt5 = $conn->prepare("DELETE FROM Cart WHERE customerID = " . $_SESSION["customerID"] . " AND transactionID = " . $_SESSION["currentTransactionID"] . " AND productID = " . $row['productID'] . "");
+      $stmt5->execute();*/
     }
+
+    $stmt6 = $conn->prepare("CALL finalizeCartTransact(" . $_SESSION["currentTransactionID"] . ", " . $_SESSION["customerID"] . ")");
+    $stmt6->execute();
 
 
     $conn = null;

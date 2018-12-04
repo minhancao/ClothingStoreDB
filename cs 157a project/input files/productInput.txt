@@ -1,0 +1,30 @@
+879767	red	417.86	Nike	top1	10
+653001	red	193.67	Balenciaga	top2	10
+641260	blue	236.76	Off White	top3	10
+973557	grey	411.93	Nike	top4	10
+420209	yellow	110.84	Ralph Lauren	top5	10
+886883	black	367.3	Balenciaga	top6	10
+394445	green	450.19	Fendi	top7	10
+560022	pink	452.67	Off White	top8	10
+163446	grey	426.41	Off White	top9	10
+910618	blue	160.39	Gucci	top10	10
+903691	blue	232.7	Gucci	bottom1	10
+285510	black	298.04	Adidas	bottom2	10
+455877	black	280.55	Balenciaga	bottom3	10
+265606	grey	345.95	Nike	bottom4	10
+439279	white	350.66	Off White	bottom5	10
+841988	white	462.14	Ralph Lauren	bottom6	10
+510826	green	185.33	Ralph Lauren	bottom7	10
+942957	pink	116.61	Ralph Lauren	bottom8	10
+581000	pink	98.08	Gucci	bottom9	10
+502222	yellow	464.94	Nike	bottom10	10
+272853	grey	461.55	Givenchy	shoe1	10
+893252	orange	499.18	Ralph Lauren	shoe2	10
+723335	pink	293.61	Ralph Lauren	shoe3	10
+532597	blue	481.85	Balenciaga	shoe4	10
+713775	red	372.48	Fendi	shoe5	10
+432984	pink	107.31	Louis Vuitton	shoe6	10
+951729	blue	473.84	Givenchy	shoe7	10
+164163	yellow	186.02	Adidas	shoe8	10
+699506	pink	308.91	Gucci	shoe9	10
+873827	black	481.86	Gucci	shoe10	10
