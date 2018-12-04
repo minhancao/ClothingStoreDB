@@ -81,7 +81,7 @@ session_start();
 <body>
 
 <div class="header">
-    <h1>Discount Designer DB</h1>
+    <h1>Clothing Designer DB</h1>
 </div>
 
 <!-- Top navigation -->
@@ -141,30 +141,32 @@ if (isset($_POST['first']) && isset($_POST['psw'])) {
         $_SESSION['password'] = $_POST['psw'];
         $_SESSION["logged_in"] = 1;
     }
+if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] = 1)
+{
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "clothingdatabase";
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "clothingdatabase";
+    try {
+        $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $conn->prepare("SELECT customerID, firstName, lastName, Address, Email FROM customer WHERE customerID = " . $_SESSION["customerID"] . " AND password = '" . $_SESSION["password"] . "';");
+        $stmt->execute();
 
-try {
-    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT customerID, firstName, lastName, Address, Email FROM customer WHERE customerID = " . $_SESSION["customerID"] . " AND password = '" . $_SESSION["password"] . "';");
-    $stmt->execute();
+        // set the resulting array to associative
+        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
-    // set the resulting array to associative
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-
-    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
-        echo $v;
+        foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+            echo $v;
+        }
     }
+    catch(PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+    $conn = null;
+    echo "</table>";
 }
-catch(PDOException $e) {
-    echo "Error: " . $e->getMessage();
-}
-$conn = null;
-echo "</table>";
 ?>
 
 </body>

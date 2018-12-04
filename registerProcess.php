@@ -162,6 +162,8 @@
         $cardNum = $_POST['cardNum'];
         $addr = $_POST['addr'];
 
+        $newCustID = 0;
+
         try {
             $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -174,8 +176,9 @@
         }
 
         echo "<h2>Thank you for registering, $first!</h2>";   
+        echo "<h2>Your Customer ID is $newCustID.</h2>"; 
         echo "<br></br>";
-        echo '<a href="index.php" class="registerbtn">Back to Home</a>';
+        echo '<a href="login.php" class="registerbtn">Login to proceed</a>';
     
     ?>
 </body>

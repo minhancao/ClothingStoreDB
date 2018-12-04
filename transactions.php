@@ -123,7 +123,7 @@ session_start();
 <body>
 
 <div class="header">
-    <h1>Discount Designer DB</h1>
+    <h1>Clothing Designer DB</h1>
 </div>
 
 <!-- Top navigation -->
@@ -150,12 +150,14 @@ session_start();
 
 <title>Transactions</title>
 <div style="padding-left:16px">
-    <h1>Product Data</h1>
+    <h1>Transactions Data</h1>
 </div>
 
 
 
 <?php
+if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] = 1)
+{
 echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
         <table style='border: solid 1px black;'></div>";
 echo "<tr><th>CustomerID</th><th>TransactionID</th><th>Total Price</th></tr>";
@@ -211,6 +213,7 @@ catch(PDOException $e) {
 }
 $conn = null;
 echo "</table>";
+}
 ?>
 
 </body>

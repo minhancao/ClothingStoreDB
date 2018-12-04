@@ -75,7 +75,7 @@
 <body>
 
 <div class="header">
-    <h1>Discount Designer DB</h1>
+    <h1>Clothing Designer DB</h1>
 </div>
 
 <!-- Top navigation -->

@@ -133,7 +133,7 @@ session_start();
 </body>
 
 <div class="header">
-    <h1>Discount Designer DB</h1>
+    <h1>Clothing Designer DB</h1>
 </div>
 
 <!-- Top navigation -->
@@ -164,7 +164,8 @@ session_start();
 
 
 <?php
-
+if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] = 1)
+{
 class TableRows extends RecursiveIteratorIterator
 {
     function __construct($it)
@@ -239,7 +240,7 @@ try {
     echo '<br></br>';
     echo '<a href="finalizePurchase.php?id='.$totalPrice.'" class="registerbtn">Finalize Purchase</a>';   
 
-
+}
 ?>
 
 </body>
