@@ -142,6 +142,7 @@
 
 
 <?php
+session_start();
 
 class TableRows extends RecursiveIteratorIterator
 {
@@ -172,13 +173,14 @@ $password = "";
 $dbname = "clothingdatabase";
 
 
-$query = $_GET['id'];
-
+$productID = $_GET['id'];
+$transactionID = rand(100000,999999);
+$_SESSION['customerID'] = $_POST['first'];
 
     try {
         $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt1 = $conn->prepare("INSERT INTO cart VALUES (431178, 110446, 163446)");
+        $stmt1 = $conn->prepare("INSERT INTO cart VALUES ('".$_SESSION['customerID']."', '". $transactionID ."', '". $productID ."')");
             echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
                         <table style='border: solid 1px black;'>
                 </div>";
