@@ -137,6 +137,7 @@ try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $stmt = $conn->prepare("SELECT * FROM Product p1 INNER JOIN Bottom t1 ON t1.productID = p1.productID");
+
     $stmt->execute();
 
     // set the resulting array to associative
