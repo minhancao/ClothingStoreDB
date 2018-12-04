@@ -1,6 +1,13 @@
 <?php
 // Start the session
 session_start();
+
+if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == 1)
+{
+    $_SESSION["logged_in"] = 0;
+    $_SESSION["customerID"] = "";
+    $_SESSION["password"] = "";
+}
 ?>
 
 <!DOCTYPE html>
@@ -134,18 +141,12 @@ session_start();
 
 <div style="padding-left:16px">
     <?php 
-        if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == 1) {
-            $id = $_SESSION["customerID"];
-            echo "<h2>Logged in as Customer $id</h2>";
+        if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == 0) {
+            echo "<h2>Successfully logged out!</h2>";   
+            session_destroy();
+            $_SESSION = array(); // Clears the $_SESSION variable
             echo '<br></br>';
-            echo '<a href="logout.php" class="registerbtn">Logout</a>';   
-        } 
-
-        else{
-            echo "<h2>Login or register to proceed</h2>";
-            echo '<a href="login.php" class="loginbtn">Login</a>';
-            echo '<a>  </a>';
-            echo '<a href="register.php" class="registerbtn">Register</a>';        
+            echo '<a href="index.php" class="loginbtn">Home</a>';
         } 
     ?>
     

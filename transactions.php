@@ -1,3 +1,9 @@
+<?php
+// Start the session
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html>
 <body>
@@ -141,7 +147,7 @@
 <?php
 echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
         <table style='border: solid 1px black;'></div>";
-echo "<tr><th>TransactionID</th><th>Price</th></tr>";
+echo "<tr><th>TransactionID</th><th>Total Price</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator {
     function __construct($it) {
@@ -169,7 +175,7 @@ $dbname = "clothingdatabase";
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM transaction");
+    $stmt = $conn->prepare("SELECT t1.transactionID, t1.price FROM transaction t1 INNER JOIN (SELECT * FROM customerpurchases WHERE customerID = " . $_SESSION["customerID"] . ") cp1 ON t1.transactionID = cp1.transactionID;");
     $stmt->execute();
 
     // set the resulting array to associative
