@@ -161,7 +161,7 @@ session_start();
 
 <title>ViewTransaction</title>
 <div style="padding-left:16px">
-    <h1>Product Data</h1>
+    <h1>Transaction Data</h1>
 </div>
 
 
