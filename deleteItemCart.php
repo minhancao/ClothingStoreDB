@@ -1,9 +1,15 @@
+<?php
+// Start the session
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <body>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             margin: 0;
@@ -56,6 +62,58 @@
             float: right;
         }
 
+        .topnav input[type=text] {
+            float: right;
+            padding: 14px 16px;
+            border: 2px;
+            font-size: 17px;
+        }
+
+        .registerbtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
+            opacity: 0.9;
+        }
+
+        .deletebtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 1px 3px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
+            opacity: 0.9;
+        }
+
+        form.search button {
+            float: right;
+            width: 20%;
+            padding:10px;
+            background: #ce1023;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+        }
+
+        form.search button:hover {
+            background: #ddd;
+        }
+
+        form.search::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+
         /* Responsive navigation menu (for mobile devices) */
         @media screen and (max-width: 600px) {
             .topnav a, .topnav-right {
@@ -72,7 +130,7 @@
         }
     </style>
 </head>
-<body>
+</body>
 
 <div class="header">
     <h1>Discount Designer DB</h1>
@@ -86,46 +144,46 @@
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
     <a href="product.php">Products</a>
-    <a href="top.php" class="active">Tops</a>
+    <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php">Transactions</a>
-    <a href="cart.php">Cart</a>
+    <a href="cart.php"  class="active">Cart</a>
+
+</div>
 
 
 
 </div>
 
-</div>
 
-
-<title>Tops</title>
+<title>DeleteItemCart</title>
 <div style="padding-left:16px">
-    <h1>Top Data</h1>
+    <h1>Cart</h1>
 </div>
 
 
 <?php
-echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
-        <table style='border: solid 1px black;'></div>";
-echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
-    <th>Name</th><th>Count</th><th>Hood</th><th>Size</th><th>Pocket</th>
-    <th>Zipper</th></tr>";
 
-class TableRows extends RecursiveIteratorIterator {
-    function __construct($it) {
+class TableRows extends RecursiveIteratorIterator
+{
+    function __construct($it)
+    {
         parent::__construct($it, self::LEAVES_ONLY);
     }
 
-    function current() {
-        return "<td style='width: 150px; border: 1px solid black;'>" . parent::current(). "</td>";
+    function current()
+    {
+        return "<td style='width: 150px; border: 1px solid black;'>" . parent::current() . "</td>";
     }
 
-    function beginChildren() {
+    function beginChildren()
+    {
         echo "<tr>";
     }
 
-    function endChildren() {
+    function endChildren()
+    {
         echo "</tr>" . "\n";
     }
 }
@@ -135,25 +193,25 @@ $username = "root";
 $password = "";
 $dbname = "clothingdatabase";
 
+$deleteItem = $_GET['id'];
+
+
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM Product p1 INNER JOIN Top t1 ON t1.productID = p1.productID");
+    $stmt = $conn->prepare("DELETE FROM Cart WHERE customerID = " . $_SESSION["customerID"] . " AND productID = $deleteItem;");
 
     $stmt->execute();
 
-    // set the resulting array to associative
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $conn = null;
 
-    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
-        echo $v;
-    }
-}
-catch(PDOException $e) {
+} catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
-$conn = null;
-echo "</table>";
+    echo "Product $deleteItem deleted from cart.";
+    echo "<br></br>";
+    echo '<a href="cart.php" class="registerbtn">Return To Cart</a>';   
+
 ?>
 
 </body>

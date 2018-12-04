@@ -1,9 +1,16 @@
+<?php
+// Start the session
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html>
 <body>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             margin: 0;
@@ -56,6 +63,58 @@
             float: right;
         }
 
+        .topnav input[type=text] {
+            float: right;
+            padding: 14px 16px;
+            border: 2px;
+            font-size: 17px;
+        }
+
+        .deletebtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 1px 3px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
+            opacity: 0.9;
+        }
+
+        .registerbtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
+            opacity: 0.9;
+        }
+
+        form.search button {
+            float: right;
+            width: 20%;
+            padding:10px;
+            background: #ce1023;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+        }
+
+        form.search button:hover {
+            background: #ddd;
+        }
+
+        form.search::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+
         /* Responsive navigation menu (for mobile devices) */
         @media screen and (max-width: 600px) {
             .topnav a, .topnav-right {
@@ -86,31 +145,31 @@
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
     <a href="product.php">Products</a>
-    <a href="top.php" class="active">Tops</a>
+    <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
-    <a href="transactions.php">Transactions</a>
+    <a href="transactions.php"  class="active">Transactions</a>
     <a href="cart.php">Cart</a>
 
 
-
-</div>
-
 </div>
 
 
-<title>Tops</title>
+
+</div>
+
+
+<title>ViewTransaction</title>
 <div style="padding-left:16px">
-    <h1>Top Data</h1>
+    <h1>Product Data</h1>
 </div>
+
 
 
 <?php
 echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
         <table style='border: solid 1px black;'></div>";
-echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
-    <th>Name</th><th>Count</th><th>Hood</th><th>Size</th><th>Pocket</th>
-    <th>Zipper</th></tr>";
+echo "<tr><th>TransactionID</th><th>ProductID</th><th>Brand Name</th><th>Name</th><th>Color</th><th>Price</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator {
     function __construct($it) {
@@ -135,18 +194,39 @@ $username = "root";
 $password = "";
 $dbname = "clothingdatabase";
 
+$transID = $_GET['id'];
+$totalPrice = 0;
+
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM Product p1 INNER JOIN Top t1 ON t1.productID = p1.productID");
 
+    $stmt = $conn->prepare("SELECT pur1.transactionID, p1.productID, p1.brandName, p1.name, p1.color, p1.price FROM (purchases pur1 INNER JOIN product p1 ON pur1.productID = p1.productID) WHERE pur1.transactionID = " . $transID . "");
     $stmt->execute();
 
     // set the resulting array to associative
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+    /*foreach (new TableRows(new RecursiveArrayIterator($result)) as $k => $v) {
         echo $v;
+    }*/
+
+    foreach($result as $row) {
+      echo "<tr class='info'>
+                <td>" . $row['transactionID'] . "</td>
+                <td>" . $row['productID'] . "</td>
+                <td>" . $row['brandName'] . "</td>
+                <td>" . $row['name'] . "</td>
+                <td>" . $row['color'] . "</td>
+                <td>" . $row['price'] . "</td>";
+    }
+
+    $stmt1 = $conn->prepare("SELECT price FROM transaction WHERE transactionID = " . $transID . "");
+    $stmt1->execute();
+    $result2 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    foreach($result2 as $row2)
+    {
+        $totalPrice = $row2['price'];
     }
 }
 catch(PDOException $e) {
@@ -154,6 +234,11 @@ catch(PDOException $e) {
 }
 $conn = null;
 echo "</table>";
+
+    echo '<br></br>';
+    echo "Total Price: $$totalPrice";
+    echo '<br></br>';
+    echo '<a href="transactions.php" class="registerbtn">Back To Transactions</a>';   
 ?>
 
 </body>

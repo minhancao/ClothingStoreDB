@@ -103,7 +103,7 @@
 
 <title>Shoes</title>
 <div style="padding-left:16px">
-    <h1>Top Data</h1>
+    <h1>Shoe Data</h1>
 </div>
 
 
@@ -139,7 +139,8 @@ $dbname = "clothingdatabase";
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT * FROM product NATURAL JOIN shoe WHERE name LIKE 'shoe%' GROUP BY productID");
+    $stmt = $conn->prepare("SELECT * FROM Product p1 INNER JOIN Shoe t1 ON t1.productID = p1.productID");
+
     $stmt->execute();
 
     // set the resulting array to associative

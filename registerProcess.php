@@ -148,42 +148,35 @@
 </div>
 
 
-<form action="registerProcess.php" method="post">
-    <div class="container">
-        <h1>Register</h1>
-        <hr>
-
-        <label for="firstName"><b>First Name</b></label>
-        <input type="text" placeholder="Enter first name" name="first" required>
-
-        <label for="lastName"><b>Last Name</b></label>
-        <input type="text" placeholder="Enter last name" name="last" required>
-
-        <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required>
-
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
-
-        <label for="psw-repeat"><b>Repeat Password</b></label>
-        <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
-
-        <label for="cardNum"><b>Card Number</b></label>
-        <input type="text" placeholder="Card Number" name="cardNum" required>
-
-        <label for="addr"><b>Address</b></label>
-        <input type="text" placeholder="Address" name="addr" required>
-        <hr>
-        <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
-
-        <button type="submit" class="registerbtn">Register</button>
-    </div>
-
-    <div class="container signin">
-        <p>Already have an account? <a href="login.php">Sign in</a>.</p>
-    </div>
-</form>
+    <?php
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "clothingdatabase";
 
 
+        $first = $_POST['first'];
+        $last = $_POST['last'];
+        $email = $_POST['email'];
+        $psw = $_POST['psw'];
+        $cardNum = $_POST['cardNum'];
+        $addr = $_POST['addr'];
+
+        try {
+            $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $newCustID = mt_rand(100000, 999999); //randomly generate 6-digit
+            $stmt = $conn->prepare("INSERT INTO Customer VALUES ($newCustID, '$psw', '$first', '$last', '$addr', '$email', '$cardNum')");
+            $stmt->execute();
+        }
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        echo "<h2>Thank you for registering, $first!</h2>";   
+        echo "<br></br>";
+        echo '<a href="index.php" class="registerbtn">Back to Home</a>';
+    
+    ?>
 </body>
 </html>

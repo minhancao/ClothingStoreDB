@@ -1,3 +1,9 @@
+<?php
+// Start the session
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html>
 <body>
@@ -135,7 +141,7 @@
 </div>
 
 
-<title>Product</title>
+<title>Purchase</title>
 <div style="padding-left:16px">
     <h1>Cart</h1>
 </div>
@@ -173,37 +179,37 @@ $password = "";
 $dbname = "clothingdatabase";
 
 
-$productID = $_GET['id'];
-$transactionID = rand(100000,999999);
-$_SESSION['customerID'] = $_POST['first'];
+$query = $_GET['id'];
+$newTransactionID = 0;
+
 
     try {
         $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt1 = $conn->prepare("INSERT INTO cart VALUES ('".$_SESSION['customerID']."', '". $transactionID ."', '". $productID ."')");
+
             echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
                         <table style='border: solid 1px black;'>
                 </div>";
         $stmt = $conn->prepare("SELECT * FROM cart");
             echo "<tr><th>CustomerID</th><th>TransactionID</th><th>ProductID</th></tr>";
 
-            $stmt1->execute();
+        if(!isset($_SESSION["currentTransactionID"]))
+        {
+            $newTransactionID = mt_rand(100000, 999999); //randomly generate 6-digit
+            $_SESSION["currentTransactionID"] = $newTransactionID;
+        }
 
-            $stmt->execute();
-            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        
+        $stmt1 = $conn->prepare("INSERT INTO cart VALUES (" . $_SESSION["customerID"] . ", " . $_SESSION["currentTransactionID"] . ", $query)");
 
-            foreach (new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k => $v) {
-                echo $v;
-            }
+        $stmt1->execute();
 
-            $conn = null;
-            echo "</table>";
 
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
 
-
+header("Location: cart.php");
 ?>
 
 </body>

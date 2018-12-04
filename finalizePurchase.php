@@ -1,3 +1,8 @@
+<?php
+// Start the session
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <body>
@@ -64,6 +69,17 @@
             font-size: 17px;
         }
 
+        .registerbtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
+            opacity: 0.9;
+        }
+
         form.search button {
             float: right;
             width: 20%;
@@ -116,18 +132,13 @@
     <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
-    <a href="product.php" class="active">Products</a>
+    <a href="product.php">Products</a>
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php">Transactions</a>
-    <a href="cart.php">Cart</a>
+    <a href="cart.php"  class="active">Cart</a>
 
-
-    <form class="search" action="productSearch.php" method="post" style="margin:auto;max-width:300px">
-        <input type="text" placeholder="Search.." name="query">
-        <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
 </div>
 
 
@@ -135,9 +146,9 @@
 </div>
 
 
-<title>Product</title>
+<title>FinalizePurchase</title>
 <div style="padding-left:16px">
-    <h1>Product Data</h1>
+    <h1>Cart</h1>
 </div>
 
 
@@ -166,76 +177,59 @@ class TableRows extends RecursiveIteratorIterator
     }
 }
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "clothingdatabase";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "clothingdatabase";
 
 
-    $query = $_POST['query'];
+$totalPrice = $_GET['id'];
 
-    $min_length = 3;
+if(isset($_SESSION["currentTransactionID"]))
+{
+    try {
+    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    if(strlen($query) >= $min_length) {
+    $stmt1 = $conn->prepare("INSERT INTO transaction VALUES(" . $_SESSION["currentTransactionID"] . ", " . $totalPrice .")");
+    $stmt2 = $conn->prepare("INSERT INTO CustomerPurchases VALUES(" . $_SESSION["customerID"] . ", " . $_SESSION["currentTransactionID"] .")");
 
-        try {
-            $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $conn->prepare("SELECT * FROM product
-                WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
-                OR (`name` LIKE '%" .$query. "%') OR (`count` LIKE '%" .$query. "%')");
-            $count = $conn->query("SELECT count(*) FROM (SELECT * FROM product
-                WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
-                OR (`name` LIKE '%" .$query. "%') OR (`count` LIKE '%" .$query. "%')) as T")->fetchColumn();
-            if ($count > 0){
+    $stmt1->execute();
+    $stmt2->execute();
 
-                echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
-                        <table style='border: solid 1px black;'>
-                </div>";
-                echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
-                <th>Name</th><th>Count</th></tr>";
+    $stmt = $conn->prepare("SELECT c1.customerID, c1.transactionID, c1.productID, p1.brandName, p1.name, p1.color, p1.price FROM ((cart c1 INNER JOIN product p1 ON c1.productID = p1.productID) INNER JOIN customer cus1 ON c1.customerID = cus1.customerID) WHERE cus1.customerID = " . $_SESSION["customerID"] . " AND cus1.password = '" . $_SESSION["password"] . "';");
 
-                $stmt->execute();
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                // set the resulting array to associative
-                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach($result as $row) {
+      $stmt3 = $conn->prepare("INSERT INTO Purchases VALUES(" . $_SESSION["currentTransactionID"] . ", " . $row['productID'] . ")");
+      $stmt3->execute();
+      $stmt4 = $conn->prepare("UPDATE Product SET count = count - 1 WHERE productID = " . $row['productID'] . "");
+      $stmt4->execute();
+      $stmt5 = $conn->prepare("DELETE FROM Cart WHERE customerID = " . $_SESSION["customerID"] . " AND transactionID = " . $_SESSION["currentTransactionID"] . " AND productID = " . $row['productID'] . "");
+      $stmt5->execute();
+    }
 
-                foreach($result as $row) {
-                echo "<tr class='info'>
-                    <td>" . $row['productID'] . "</td>
-                    <td>" . $row['color'] . "</td>
-                    <td>" . $row['price'] . "</td>
-                    <td>" . $row['brandName'] . "</td>
-                    <td>" . $row['name'] . "</td>
-                    <td>" . $row['count'] . "</td>
-                    <td><a class='btn btn-primary btn-lg'  href='purchase.php?id=".$row['productID']."'>Purchase</a></td>
-                                    </td>
-                                       </tr>";
-                    }
 
-                $conn = null;
-                echo "<h2>Search results for: '$query' </h2>";
-                echo "</table>";
-            }
-            else  {
-                echo "<div style=\"padding-left:16px\">
-                <h2>No results for: '$query'</h2>
-                </div>";
-                echo  "<div style=\"padding-left:16px\">
-                <h3>It does not exist in the database at this time.</h3>
-                </div>";
-            }
+    $conn = null;
+    unset($_SESSION["currentTransactionID"]);
 
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+    echo "Error: " . $e->getMessage();
         }
-    }
-    else {
-        echo "<div style=\"padding-left:16px\">
-                <h2>No results can be shown matching your criteria. Try being more specific.</h2>
-                </div>";
-    }
+    echo '<br></br>';
+    echo "<h2>Transaction successfully processed.</h2>";
+    echo '<br></br>';
+    echo '<a href="transactions.php" class="registerbtn">Go to Transactions</a>';  
+}
 
+else 
+{
+    header("Location: cart.php");
+}
+
+ 
 
 ?>
 

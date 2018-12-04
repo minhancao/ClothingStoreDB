@@ -69,6 +69,28 @@ session_start();
             font-size: 17px;
         }
 
+        .registerbtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
+            opacity: 0.9;
+        }
+
+        .deletebtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 1px 3px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
+            opacity: 0.9;
+        }
+
         form.search button {
             float: right;
             width: 20%;
@@ -128,11 +150,6 @@ session_start();
     <a href="transactions.php">Transactions</a>
     <a href="cart.php"  class="active">Cart</a>
 
-
-    <form class="search" action="productSearch.php" method="post" style="margin:auto;max-width:300px">
-        <input type="text" placeholder="Search.." name="query">
-        <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
 </div>
 
 
@@ -140,7 +157,7 @@ session_start();
 </div>
 
 
-<title>Product</title>
+<title>Cart</title>
 <div style="padding-left:16px">
     <h1>Cart</h1>
 </div>
@@ -177,7 +194,7 @@ $password = "";
 $dbname = "clothingdatabase";
 
 
-
+$totalPrice = 0;
 
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
@@ -190,10 +207,25 @@ try {
 
     $stmt->execute();
 
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach (new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k => $v) {
+    /*foreach (new TableRows(new RecursiveArrayIterator($result)) as $k => $v) {
         echo $v;
+    }*/
+
+    foreach($result as $row) {
+      echo "<tr class='info'>
+                <td>" . $row['customerID'] . "</td>
+                <td>" . $row['transactionID'] . "</td>
+                <td>" . $row['productID'] . "</td>
+                <td>" . $row['brandName'] . "</td>
+                <td>" . $row['name'] . "</td>
+                <td>" . $row['color'] . "</td>
+                <td>" . $row['price'] . "</td>
+                <td><a class='deletebtn'  href='deleteItemCart.php?id=".$row['productID']."'>Delete</a></td>
+                                </td>
+                                   </tr>";
+        $totalPrice = $totalPrice + $row['price'];
     }
 
     $conn = null;
@@ -202,6 +234,10 @@ try {
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
+    echo '<br></br>';
+    echo "Total Price: $$totalPrice";
+    echo '<br></br>';
+    echo '<a href="finalizePurchase.php?id='.$totalPrice.'" class="registerbtn">Finalize Purchase</a>';   
 
 
 ?>

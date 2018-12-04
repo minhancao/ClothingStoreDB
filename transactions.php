@@ -70,6 +70,17 @@ session_start();
             font-size: 17px;
         }
 
+        .deletebtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 1px 3px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
+            opacity: 0.9;
+        }
+
         form.search button {
             float: right;
             width: 20%;
@@ -137,7 +148,7 @@ session_start();
 </div>
 
 
-<title>Product</title>
+<title>Transactions</title>
 <div style="padding-left:16px">
     <h1>Product Data</h1>
 </div>
@@ -147,7 +158,7 @@ session_start();
 <?php
 echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
         <table style='border: solid 1px black;'></div>";
-echo "<tr><th>TransactionID</th><th>Total Price</th></tr>";
+echo "<tr><th>CustomerID</th><th>TransactionID</th><th>Total Price</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator {
     function __construct($it) {
@@ -175,14 +186,24 @@ $dbname = "clothingdatabase";
 try {
     $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $stmt = $conn->prepare("SELECT t1.transactionID, t1.price FROM transaction t1 INNER JOIN (SELECT * FROM customerpurchases WHERE customerID = " . $_SESSION["customerID"] . ") cp1 ON t1.transactionID = cp1.transactionID;");
+    $stmt = $conn->prepare("SELECT cp1.customerID, t1.transactionID, t1.price FROM transaction t1 INNER JOIN (SELECT * FROM customerpurchases WHERE customerID = " . $_SESSION["customerID"] . ") cp1 ON t1.transactionID = cp1.transactionID;");
     $stmt->execute();
 
     // set the resulting array to associative
-    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+    /*foreach (new TableRows(new RecursiveArrayIterator($result)) as $k => $v) {
         echo $v;
+    }*/
+
+    foreach($result as $row) {
+      echo "<tr class='info'>
+                <td>" . $row['customerID'] . "</td>
+                <td>" . $row['transactionID'] . "</td>
+                <td>" . $row['price'] . "</td>
+                <td><a class='deletebtn'  href='viewTransaction.php?id=".$row['transactionID']."'>View Transaction</a></td>
+                                </td>
+                                   </tr>";
     }
 }
 catch(PDOException $e) {

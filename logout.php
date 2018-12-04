@@ -115,10 +115,10 @@ if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == 1)
 <body>
 
 <div class="header">
-    <h1>Discount Designer DB</h1>
+    <h1>Clothing Designer DB</h1>
 </div>
 
-<title>Discount Designer</title>
+<title>Clothing Designer</title>
 
 
 <!-- Top navigation -->
