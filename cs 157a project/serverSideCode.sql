@@ -36,31 +36,24 @@ BEGIN
 END //
 DELIMITER ;
 
-DELIMITER ;
-CREATE FUNCTION calculateTax (@input FLOAT)
-  RETURNS FLOAT
-  AS
+DELIMITER $$
+CREATE FUNCTION calculateTax (input FLOAT) RETURNS FLOAT
+    DETERMINISTIC
   BEGIN
-  DECLARE @subtotal FLOAT;
-  SET @subtotal = @input;
-    RETURN @subtotal * 0.0875;
-  END //
+    RETURN input * 0.0875;
+  END
 DELIMITER ;
 
+DELIMITER $$
+CREATE FUNCTION calculateTotal (input FLOAT) RETURNS FLOAT
+    DETERMINISTIC
+BEGIN
+  DECLARE subtotal FLOAT DEFAULT 0;
+  SET subtotal = input;
+  SET subtotal = subtotal + calculateTax(subtotal);
+    RETURN subtotal + 6.99;
+ END
 DELIMITER ;
-CREATE FUNCTION calculateTotal (@input FLOAT)
-  RETURNS FLOAT
-  AS
-  BEGIN
-  DECLARE @subtotal FLOAT DEFAULT 0;
-  SET @subtotal = @input;
-  SET @subtotal = @subtotal + calculateTax(@subtotal);
-    RETURN @subtotal + 6.99;
-  END //
-DELIMITER ;
-
-
-
 
     
   
