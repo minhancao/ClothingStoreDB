@@ -1,3 +1,5 @@
+USE ClothingDatabase;
+
 DELIMITER //
 CREATE PROCEDURE decrementCountInProduct
 (IN p_productID INT)
@@ -31,3 +33,21 @@ BEGIN
 
 END //
 DELIMITER ;
+
+DELIMITER $$
+CREATE FUNCTION calculateTax (input FLOAT) RETURNS FLOAT
+    DETERMINISTIC
+  BEGIN
+    RETURN input * 0.0875;
+END
+
+DELIMITER $$
+CREATE FUNCTION calculateTotal (input FLOAT) RETURNS FLOAT
+    DETERMINISTIC
+BEGIN
+  DECLARE subtotal FLOAT DEFAULT 0;
+  SET subtotal = input;
+  SET subtotal = subtotal + calculateTax(subtotal);
+    RETURN subtotal + 6.99;
+END
+
