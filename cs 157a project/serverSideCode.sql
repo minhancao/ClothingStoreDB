@@ -19,6 +19,8 @@ BEGIN
   SELECT SUM(p1.price) INTO v_totalprice
   FROM Product p1 INNER JOIN (SELECT * FROM Cart WHERE transactionID = p_transactionID AND customerID = p_customerID) c1 ON p1.productID = c1.productID;
 
+  SET v_totalprice = calculateTotal(v_totalprice);
+  
   INSERT INTO Transaction(transactionID, price)
   VALUES(p_transactionID, v_totalprice);
 
@@ -33,3 +35,32 @@ BEGIN
 
 END //
 DELIMITER ;
+
+DELIMITER ;
+CREATE FUNCTION calculateTax (@input FLOAT)
+  RETURNS FLOAT
+  AS
+  BEGIN
+  DECLARE @subtotal FLOAT;
+  SET @subtotal = @input;
+    RETURN @subtotal * 0.0875;
+  END //
+DELIMITER ;
+
+DELIMITER ;
+CREATE FUNCTION calculateTotal (@input FLOAT)
+  RETURNS FLOAT
+  AS
+  BEGIN
+  DECLARE @subtotal FLOAT DEFAULT 0;
+  SET @subtotal = @input;
+  SET @subtotal = @subtotal + calculateTax(@subtotal);
+    RETURN @subtotal + 6.99;
+  END //
+DELIMITER ;
+
+
+
+
+    
+  
