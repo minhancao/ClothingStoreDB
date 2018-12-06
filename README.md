@@ -1,3 +1,4 @@
 # E-commerce Clothing Store DB
-Some code I wrote for CS 157A Intro to Databases at SJSU
+Web app that models an e-commerce aggregator site. For Fall 2018 CS 157A semester project at SJSU.
 
+Contributor: https://github.com/minhancao
