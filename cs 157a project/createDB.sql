@@ -14,7 +14,7 @@ CREATE TABLE Customer (
 	lastName VARCHAR(255),
 	address VARCHAR(255),
 	email VARCHAR(255),
-	cardNumber VARCHAR(16) NOT NULL,
+	cardNumber DECIMAL(16,0) NOT NULL,
 	PRIMARY KEY(customerID)
 );
 

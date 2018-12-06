@@ -266,7 +266,7 @@ try {
     echo "<br>";
     echo "Total Price: $$totalPrice2";
     echo '<br></br>';
-    echo '<a href="finalizePurchase.php?id='.$totalPrice.'" class="registerbtn">Finalize Purchase</a>';   
+    echo '<a href="finalizePurchase.php?id='.$totalPrice2.'" class="registerbtn">Finalize Purchase</a>';   
 
 }
 ?>
