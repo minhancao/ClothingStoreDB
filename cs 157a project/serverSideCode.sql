@@ -110,7 +110,6 @@ BEGIN
   SET subtotal = input;
   SET subtotal = subtotal + calculateTax(subtotal);
     RETURN subtotal + 6.99;
-<<<<<<< HEAD
 END
 
 CREATE INDEX ProductNameIndex on Product(name);
@@ -119,5 +118,4 @@ CREATE INDEX ProductTypeIndex on Product(type);
 CREATE INDEX ProducttPriceIndex on Product(price);
 CREATE INDEX CustomerTransactions on CustomerPurchases(customerID, transactionID);
 CREATE INDEX ProductsInOneTransaction on Purchases(transactionID, productID);
-CREATE INDEX transactionPrice on Transaction(transactionID, price);=======
->>>>>>> 60f858899ea7c23f890277914f8a284c70c8ef6b
+CREATE INDEX transactionPrice on Transaction(transactionID, price);
