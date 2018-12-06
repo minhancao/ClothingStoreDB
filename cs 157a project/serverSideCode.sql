@@ -19,8 +19,6 @@ BEGIN
   SELECT SUM(p1.price) INTO v_totalprice
   FROM Product p1 INNER JOIN (SELECT * FROM Cart WHERE transactionID = p_transactionID AND customerID = p_customerID) c1 ON p1.productID = c1.productID;
 
-  SET v_totalprice = calculateTotal(v_totalprice);
-  
   INSERT INTO Transaction(transactionID, price)
   VALUES(p_transactionID, v_totalprice);
 
@@ -41,8 +39,7 @@ CREATE FUNCTION calculateTax (input FLOAT) RETURNS FLOAT
     DETERMINISTIC
   BEGIN
     RETURN input * 0.0875;
-  END
-DELIMITER ;
+END
 
 DELIMITER $$
 CREATE FUNCTION calculateTotal (input FLOAT) RETURNS FLOAT
@@ -52,8 +49,4 @@ BEGIN
   SET subtotal = input;
   SET subtotal = subtotal + calculateTax(subtotal);
     RETURN subtotal + 6.99;
- END
-DELIMITER ;
-
-    
-  
+END
