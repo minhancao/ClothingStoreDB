@@ -1,6 +1,21 @@
 USE ClothingDatabase;
 
 DELIMITER $$
+CREATE OR REPLACE TRIGGER productCountIsZero
+    BEFORE INSERT ON Cart
+    FOR EACH ROW 
+BEGIN
+    DECLARE countCheck INT;
+
+    SET countCheck := (SELECT count FROM Product WHERE productID = NEW.productID);
+
+    IF(countCheck <= 0) THEN SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Count <= 0';
+    END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
 CREATE OR REPLACE TRIGGER deleteProductInCorrespondingTables 
     AFTER DELETE ON Product
     FOR EACH ROW 
@@ -16,21 +31,27 @@ DELIMITER ;
 
 
 DELIMITER $$
-CREATE OR REPLACE TRIGGER checkCustomer
-    BEFORE INSERT ON Customer FOR EACH ROW
+CREATE OR REPLACE TRIGGER checkCustomer BEFORE INSERT ON
+    Customer FOR EACH ROW
 BEGIN
-    IF (NEW.cardNumber IS NULL) THEN
-     SET NEW.cardNumber="9999999999999999";
-    END IF;
-    IF (NEW.cardNumber = 0) THEN
-     SET NEW.cardNumber="9999999999999999";
-    END IF;
-    IF (NEW.cardNumber < 1000000000000000) THEN
-     SET NEW.cardNumber="9999999999999999";
-    END IF;
-    IF (NEW.email NOT REGEXP '^[^@]+@[^@]+\.[^@]{2,}$') THEN
-     SET NEW.email = 'default@email.com';
-    END IF;
+        IF(NEW.cardNumber IS NULL) THEN SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT
+        = 'card error' ;
+    END IF ; 
+    IF(NEW.cardNumber = 0) THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT
+    = 'card error' ;
+END IF ; 
+IF(NEW.cardNumber < 1000000000000000) THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT
+    = 'card error' ;
+END IF ; 
+IF(
+    NEW.email NOT REGEXP '^[^@]+@[^@]+.[^@]{2,}$'
+) THEN SIGNAL SQLSTATE '45000'
+SET MESSAGE_TEXT
+    = 'email error' ;
+END IF ;
 END$$
 DELIMITER ;
 
@@ -96,26 +117,18 @@ END //
 DELIMITER ;
 
 DELIMITER $$
-CREATE FUNCTION calculateTax (input FLOAT) RETURNS FLOAT
+CREATE OR REPLACE FUNCTION calculateTax (input FLOAT) RETURNS FLOAT
     DETERMINISTIC
   BEGIN
     RETURN input * 0.0875;
-END
+END$$
 
 DELIMITER $$
-CREATE FUNCTION calculateTotal (input FLOAT) RETURNS FLOAT
+CREATE OR REPLACE FUNCTION calculateTotal (input FLOAT) RETURNS FLOAT
     DETERMINISTIC
 BEGIN
   DECLARE subtotal FLOAT DEFAULT 0;
   SET subtotal = input;
   SET subtotal = subtotal + calculateTax(subtotal);
     RETURN subtotal + 6.99;
-END
-
-CREATE INDEX ProductNameIndex on Product(name);
-CREATE INDEX ProductBrandNameIndex on Product(brandName);
-CREATE INDEX ProductTypeIndex on Product(type);
-CREATE INDEX ProducttPriceIndex on Product(price);
-CREATE INDEX CustomerTransactions on CustomerPurchases(customerID, transactionID);
-CREATE INDEX ProductsInOneTransaction on Purchases(transactionID, productID);
-CREATE INDEX transactionPrice on Transaction(transactionID, price);
+END$$

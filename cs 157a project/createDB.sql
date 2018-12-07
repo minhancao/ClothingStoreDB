@@ -8,14 +8,14 @@ CREATE TABLE Store (
 );
 
 CREATE TABLE Customer (
-	customerID INT,
-	password VARCHAR(255),
-	firstName VARCHAR(255),
-	lastName VARCHAR(255),
-	address VARCHAR(255),
-	email VARCHAR(255),
-	cardNumber DECIMAL(16,0) NOT NULL,
-	PRIMARY KEY(customerID)
+    customerID INT,
+    password VARCHAR(255) NOT NULL,
+    firstName VARCHAR(255),
+    lastName VARCHAR(255),
+    address VARCHAR(255),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    cardNumber DECIMAL(16,0) NOT NULL, 
+    PRIMARY KEY(customerID)
 );
 
 CREATE TABLE Transaction (

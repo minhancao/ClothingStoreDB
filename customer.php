@@ -137,8 +137,29 @@ class TableRows extends RecursiveIteratorIterator {
 
 
 if (isset($_POST['first']) && isset($_POST['psw'])) {
-        $_SESSION['customerID'] = $_POST['first'];
-        $_SESSION['password'] = $_POST['psw'];
+        try {
+        $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $conn->prepare("SELECT customerID, firstName, lastName, Address, Email FROM customer WHERE customerID = " . $_POST['first'] . " AND password = '" . $_POST['psw'] . "';");
+        $stmt->execute();
+
+        // set the resulting array to associative
+        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        if($result.notEmpty())
+        {
+            $_SESSION['customerID'] = $_POST['first'];
+            $_SESSION['password'] = $_POST['psw'];
+        }
+
+        foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+            echo $v;
+        }
+    }
+    catch(PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+    $conn = null;
         $_SESSION["logged_in"] = 1;
     }
 if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] = 1)
