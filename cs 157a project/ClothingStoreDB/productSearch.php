@@ -64,17 +64,6 @@
             font-size: 17px;
         }
 
-        .loginbtn {
-            background-color: #ce1023;
-            color: white;
-            padding: 16px 20px;
-            margin: 8px 0;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            opacity: 0.9;
-        }
-
         form.search button {
             float: right;
             width: 20%;
@@ -117,7 +106,7 @@
 </body>
 
 <div class="header">
-    <h1>Clothing Designer DB</h1>
+    <h1>Discount Designer DB</h1>
 </div>
 
 <!-- Top navigation -->
@@ -127,13 +116,18 @@
     <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
-    <a href="product.php">Products</a>
+    <a href="product.php" class="active">Products</a>
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php">Transactions</a>
-    <a href="cart.php"  class="active">Cart</a>
+    <a href="cart.php">Cart</a>
 
+
+    <form class="search" action="productSearch.php" method="post" style="margin:auto;max-width:300px">
+        <input type="text" placeholder="Search.." name="query">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
 </div>
 
 
@@ -141,11 +135,13 @@
 </div>
 
 
-<title>Purchase</title>
+<title>Product</title>
+<div style="padding-left:16px">
+    <h1>Product Data</h1>
+</div>
 
 
 <?php
-session_start();
 
 class TableRows extends RecursiveIteratorIterator
 {
@@ -170,47 +166,76 @@ class TableRows extends RecursiveIteratorIterator
     }
 }
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "clothingdatabase";
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "clothingdatabase";
 
 
-$query = $_GET['id'];
-$newTransactionID = 0;
+    $query = $_POST['query'];
 
+    $min_length = 3;
 
-    try {
-        $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    if(strlen($query) >= $min_length) {
 
-            echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
+        try {
+            $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $conn->prepare("SELECT * FROM product
+                WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
+                OR (`name` LIKE '%" .$query. "%') OR (`count` LIKE '%" .$query. "%')");
+            $count = $conn->query("SELECT count(*) FROM (SELECT * FROM product
+                WHERE (`productID` LIKE '%" .$query. "%') OR (`color` LIKE '%" .$query. "%') OR (`brandName` LIKE '%" .$query. "%')
+                OR (`name` LIKE '%" .$query. "%') OR (`count` LIKE '%" .$query. "%')) as T")->fetchColumn();
+            if ($count > 0){
+
+                echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
                         <table style='border: solid 1px black;'>
                 </div>";
-        $stmt = $conn->prepare("SELECT * FROM cart");
+                echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
+                <th>Name</th><th>Count</th></tr>";
 
-        if(!isset($_SESSION["currentTransactionID"]))
-        {
-            $newTransactionID = mt_rand(100000, 999999); //randomly generate 6-digit
-            $_SESSION["currentTransactionID"] = $newTransactionID;
-        }
+                $stmt->execute();
 
-        
-        $stmt1 = $conn->prepare("INSERT INTO cart VALUES (" . $_SESSION["customerID"] . ", " . $_SESSION["currentTransactionID"] . ", $query)");
+                // set the resulting array to associative
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt1->execute();
-        header("Location: cart.php");
+                foreach($result as $row) {
+                echo "<tr class='info'>
+                    <td>" . $row['productID'] . "</td>
+                    <td>" . $row['color'] . "</td>
+                    <td>" . $row['price'] . "</td>
+                    <td>" . $row['brandName'] . "</td>
+                    <td>" . $row['name'] . "</td>
+                    <td>" . $row['count'] . "</td>
+                    <td><a class='btn btn-primary btn-lg'  href='purchase.php?id=".$row['productID']."'>Purchase</a></td>
+                                    </td>
+                                       </tr>";
+                    }
 
-
-    } catch (PDOException $e) {
-        $msg = $e->getMessage();
-        if (strpos($msg, "Count <= 0")) {
-                echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
-                     <h2>Sorry, the product you are trying to add is currently out of stock.</h2></div>";
-                echo "<br>";
-                echo '<div style=\'padding-left:16px; padding-right: 16px; padding-bottom: 16px\'><a href="cart.php" class="loginbtn">Back to cart</a></div>';
+                $conn = null;
+                echo "<h2>Search results for: '$query' </h2>";
+                echo "</table>";
             }
+            else  {
+                echo "<div style=\"padding-left:16px\">
+                <h2>No results for: '$query'</h2>
+                </div>";
+                echo  "<div style=\"padding-left:16px\">
+                <h3>It does not exist in the database at this time.</h3>
+                </div>";
+            }
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
     }
+    else {
+        echo "<div style=\"padding-left:16px\">
+                <h2>No results can be shown matching your criteria. Try being more specific.</h2>
+                </div>";
+    }
+
 
 ?>
 

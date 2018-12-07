@@ -1,9 +1,3 @@
-<?php
-// Start the session
-session_start();
-
-?>
-
 <!DOCTYPE html>
 <html>
 <body>
@@ -44,6 +38,9 @@ session_start();
             background-color: #ddd;
             color: black;
         }
+
+        body {margin:0;padding:0}
+
 
         .topnav a.active {
             background-color: #ce1023;
@@ -90,11 +87,11 @@ session_start();
     <!-- Left-aligned links (default) -->
     <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
-    <a href="customer.php" class="active">Customer</a>
+    <a href="customer.php">Customers</a>
     <a href="product.php">Products</a>
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
-    <a href="shoe.php">Shoes</a>
+    <a href="shoe.php" class="active">Shoes</a>
     <a href="transactions.php">Transactions</a>
     <a href="cart.php">Cart</a>
 
@@ -104,13 +101,17 @@ session_start();
 </div>
 
 
-<title>Customers</title>
+<title>Shoes</title>
 <div style="padding-left:16px">
-    <h1>Customer Data</h1>
+    <h1>Shoe Data</h1>
 </div>
 
 
 <?php
+echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
+        <table style='border: solid 1px black;'></div>";
+echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
+    <th>Name</th><th>Count</th><th>Size</th></tr>";
 
 class TableRows extends RecursiveIteratorIterator {
     function __construct($it) {
@@ -118,7 +119,7 @@ class TableRows extends RecursiveIteratorIterator {
     }
 
     function current() {
-        return "<td style='width: 150px; border: 1px solid black;'>" . parent::current(). "</td>";
+        return "<td style='width: 200px; border: 1px solid black;'>" . parent::current(). "</td>";
     }
 
     function beginChildren() {
@@ -135,59 +136,25 @@ $username = "root";
 $password = "";
 $dbname = "clothingdatabase";
 
-if (isset($_POST['first']) && isset($_POST['psw'])) {
-        try {
-        $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare("SELECT customerID, firstName, lastName, Address, Email FROM customer WHERE customerID = " . $_POST['first'] . " AND password = '" . $_POST['psw'] . "';");
-        $stmt->execute();
+try {
+    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $conn->prepare("SELECT * FROM Product p1 INNER JOIN Shoe t1 ON t1.productID = p1.productID");
 
-        if($stmt->rowCount() == 0)
-        {
-            header("Location: loginFail.php");
-        }
+    $stmt->execute();
 
-        else
-        {
-            $_SESSION['customerID'] = $_POST['first'];
-            $_SESSION['password'] = $_POST['psw'];
-            $_SESSION["logged_in"] = 1;
-        }
+    // set the resulting array to associative
+    $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
+    foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+        echo $v;
     }
-    catch(PDOException $e) {
-        $conn = null;
-        header("Location: loginFail.php");
-    }
-        
-        
-    }
-if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] = 1)
-{
-    echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
-        <table style='border: solid 1px black;'></div>";
-    echo "<tr><th>CustomerID</th><th>First Name</th><th>Last Name</th><th>Address</th>
-    <th>Email</th></tr>";
-    
-    try {
-        $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $stmt = $conn->prepare("SELECT customerID, firstName, lastName, Address, Email FROM customer WHERE customerID = " . $_SESSION["customerID"] . " AND password = '" . $_SESSION["password"] . "';");
-        $stmt->execute();
-
-        // set the resulting array to associative
-        $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-
-        foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
-            echo $v;
-        }
-    }
-    catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
-    $conn = null;
-    echo "</table>";
 }
+catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+$conn = null;
+echo "</table>";
 ?>
 
 </body>

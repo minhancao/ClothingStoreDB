@@ -1,0 +1,27 @@
+Installing XAMPP
+1) go to https://www.apachefriends.org/download.html and download version "7.2.12 / PHP 7.2.12" for Windows
+2) set up XAMPP in default directory
+3) start apache and mysql on XAMPP control panel
+
+Setting up Database...
+1) open a web browser and go to localhost/phpmyadmin/server_import.php
+2) import in createDB.sql from script files folder and click go
+3) copy and paste all the input txt files from input files folder into C:\xampp\mysql\data\clothingdatabase
+4) import in loadDB.sql from script files folder and click go
+5) import in serverSideCode.sql from script files folder and click go
+6) import in indexes.sql from script files folder and click go
+
+Putting application in right place for it to run...
+1) Copy the whole ClothingStoreDB folder and paste it in this directory C:\xampp\htdocs
+
+Running/testing the application...
+1) Open a new tab or window on web browser and go to http://localhost/ClothingStoreDB/
+MAKE SURE APACHE AND MYSQL SERVER IS RUNNING ON XAMPP CONTROL PANEL!!
+2) Register as a customer, you'll be given a customerID to use when logging in
+3) Login with given customerID and your password entered from registration
+4) Add products to cart from the Products tab
+5) Finalize your purchase in the Cart tab
+6) You can see past transactions specifically for your customer account in Transactions tab
+
+
+

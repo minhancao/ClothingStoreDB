@@ -1,7 +1,6 @@
 <?php
 // Start the session
 session_start();
-
 ?>
 
 <!DOCTYPE html>
@@ -135,34 +134,18 @@ session_start();
 
 <div style="padding-left:16px">
     <?php 
-    if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == 1)
-    {
-        $_SESSION["logged_in"] = 0;
-    }
-        if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == 0) {
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "clothingdatabase";
-
-            try{
-                $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $stmt = $conn->prepare("DELETE FROM Cart WHERE customerID = " . $_SESSION["customerID"] . "");
-                $stmt->execute();
-            }
-
-            catch (PDOException $e) {
-                echo "Error: " . $e->getMessage();
-            }
-            $_SESSION["customerID"] = "";
-            $_SESSION["password"] = "";
-
-            echo "<h2>Successfully logged out!</h2>";   
-            session_destroy();
-            $_SESSION = array(); // Clears the $_SESSION variable
+        if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == 1) {
+            $id = $_SESSION["customerID"];
+            echo "<h2>Logged in as Customer $id</h2>";
             echo '<br></br>';
-            echo '<a href="index.php" class="loginbtn">Home</a>';
+            echo '<a href="logout.php" class="registerbtn">Logout</a>';   
+        } 
+
+        else{
+            echo "<h2>Login or register to proceed</h2>";
+            echo '<a href="login.php" class="loginbtn">Login</a>';
+            echo '<a>  </a>';
+            echo '<a href="register.php" class="registerbtn">Register</a>';        
         } 
     ?>
     

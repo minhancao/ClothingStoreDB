@@ -1,3 +1,8 @@
+<?php
+// Start the session
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <body>
@@ -64,14 +69,25 @@
             font-size: 17px;
         }
 
-        .loginbtn {
+        .registerbtn {
             background-color: #ce1023;
             color: white;
             padding: 16px 20px;
             margin: 8px 0;
             border: none;
             cursor: pointer;
-            width: 100%;
+            width: 15%;
+            opacity: 0.9;
+        }
+
+        .deletebtn {
+            background-color: #ce1023;
+            color: white;
+            padding: 1px 3px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 15%;
             opacity: 0.9;
         }
 
@@ -141,12 +157,15 @@
 </div>
 
 
-<title>Purchase</title>
+<title>Cart</title>
+<div style="padding-left:16px">
+    <h1>Cart</h1>
+</div>
 
 
 <?php
-session_start();
-
+if(isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] = 1)
+{
 class TableRows extends RecursiveIteratorIterator
 {
     function __construct($it)
@@ -176,42 +195,80 @@ $password = "";
 $dbname = "clothingdatabase";
 
 
-$query = $_GET['id'];
-$newTransactionID = 0;
+$totalPrice = 0;
+$totalPrice2 = 0;
+$tax = 0;
 
-
-    try {
-        $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
+try {
+    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
                         <table style='border: solid 1px black;'>
                 </div>";
-        $stmt = $conn->prepare("SELECT * FROM cart");
+    $stmt = $conn->prepare("SELECT c1.customerID, c1.transactionID, c1.productID, p1.brandName, p1.name, p1.color, p1.price FROM ((cart c1 INNER JOIN product p1 ON c1.productID = p1.productID) INNER JOIN customer cus1 ON c1.customerID = cus1.customerID) WHERE cus1.customerID = " . $_SESSION["customerID"] . " AND cus1.password = '" . $_SESSION["password"] . "'");
+    echo "<tr><th>CustomerID</th><th>TransactionID</th><th>ProductID</th><th>Brand Name</th><th>Name</th><th>Color</th><th>Price</th></tr>";
 
-        if(!isset($_SESSION["currentTransactionID"]))
-        {
-            $newTransactionID = mt_rand(100000, 999999); //randomly generate 6-digit
-            $_SESSION["currentTransactionID"] = $newTransactionID;
-        }
+    $stmt->execute();
 
-        
-        $stmt1 = $conn->prepare("INSERT INTO cart VALUES (" . $_SESSION["customerID"] . ", " . $_SESSION["currentTransactionID"] . ", $query)");
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt1->execute();
-        header("Location: cart.php");
+    /*foreach (new TableRows(new RecursiveArrayIterator($result)) as $k => $v) {
+        echo $v;
+    }*/
 
-
-    } catch (PDOException $e) {
-        $msg = $e->getMessage();
-        if (strpos($msg, "Count <= 0")) {
-                echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
-                     <h2>Sorry, the product you are trying to add is currently out of stock.</h2></div>";
-                echo "<br>";
-                echo '<div style=\'padding-left:16px; padding-right: 16px; padding-bottom: 16px\'><a href="cart.php" class="loginbtn">Back to cart</a></div>';
-            }
+    foreach($result as $row) {
+      echo "<tr class='info'>
+                <td>" . $row['customerID'] . "</td>
+                <td>" . $row['transactionID'] . "</td>
+                <td>" . $row['productID'] . "</td>
+                <td>" . $row['brandName'] . "</td>
+                <td>" . $row['name'] . "</td>
+                <td>" . $row['color'] . "</td>
+                <td>" . $row['price'] . "</td>
+                <td><a class='deletebtn'  href='deleteItemCart.php?id=".$row['productID']."'>Delete</a></td>
+                                </td>
+                                   </tr>";
+        $totalPrice = $totalPrice + $row['price'];
     }
 
+    $stmt1 = $conn->prepare("SELECT calculateTax(" . $totalPrice . ")");
+    $stmt1->execute();
+    $result1 = $stmt1->fetch(PDO::FETCH_ASSOC);
+
+    foreach($result1 as $row1)
+    {
+        $tax = $row1;
+    }
+    $tax = number_format($tax, 2);
+
+    $stmt2 = $conn->prepare("SELECT calculateTotal(" . $totalPrice . ")");
+    $stmt2->execute();
+    $result2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+    foreach($result2 as $row2)
+    {
+        $totalPrice2 = $row2;
+    }
+    $totalPrice2 = number_format($totalPrice2, 2);
+
+    $conn = null;
+    echo "</table>";
+
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+    echo '<br></br>';
+    echo "Price before tax: $$totalPrice";
+    echo "<br>";
+    echo "Tax: $$tax";
+    echo "<br>";
+    echo "Shipping & Handling: $6.99";
+    echo "<br>";
+    echo "Total Price: $$totalPrice2";
+    echo '<br></br>';
+    echo '<a href="finalizePurchase.php?id='.$totalPrice2.'" class="registerbtn">Finalize Purchase</a>';   
+
+}
 ?>
 
 </body>

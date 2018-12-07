@@ -1,3 +1,9 @@
+<?php
+// Start the session
+session_start();
+
+?>
+
 <!DOCTYPE html>
 <html>
 <body>
@@ -64,17 +70,6 @@
             font-size: 17px;
         }
 
-        .loginbtn {
-            background-color: #ce1023;
-            color: white;
-            padding: 16px 20px;
-            margin: 8px 0;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            opacity: 0.9;
-        }
-
         form.search button {
             float: right;
             width: 20%;
@@ -114,7 +109,7 @@
         }
     </style>
 </head>
-</body>
+<body>
 
 <div class="header">
     <h1>Clothing Designer DB</h1>
@@ -127,13 +122,18 @@
     <a href="index.php">Home</a>
     <a href="store.php">Stores</a>
     <a href="customer.php">Customers</a>
-    <a href="product.php">Products</a>
+    <a href="product.php" class="active">Products</a>
     <a href="top.php">Tops</a>
     <a href="bottom.php">Bottoms</a>
     <a href="shoe.php">Shoes</a>
     <a href="transactions.php">Transactions</a>
-    <a href="cart.php"  class="active">Cart</a>
+    <a href="cart.php">Cart</a>
 
+
+    <form class="search" action="productSearch.php" method="post" style="margin:auto;max-width:300px">
+        <input type="text" placeholder="Search.." name="query">
+        <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
 </div>
 
 
@@ -141,31 +141,34 @@
 </div>
 
 
-<title>Purchase</title>
+<title>Product</title>
+<div style="padding-left:16px">
+    <h1>Product Data</h1>
+</div>
+
 
 
 <?php
-session_start();
+//echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
+  //      <table style='border: solid 1px black;'></div>";
+//echo "<tr><th>ProductID</th><th>Color</th><th>Price</th><th>Brand Name</th>
+  //  <th>Name</th><th>Type</th><th>Purchase</th></tr>";
 
-class TableRows extends RecursiveIteratorIterator
-{
-    function __construct($it)
-    {
+
+class TableRows extends RecursiveIteratorIterator {
+    function __construct($it) {
         parent::__construct($it, self::LEAVES_ONLY);
     }
 
-    function current()
-    {
-        return "<td style='width: 150px; border: 1px solid black;'>" . parent::current() . "</td>";
+    function current() {
+        return "<td style='width: 150px; border: 1px solid black;'>" . parent::current(). "</td>";
     }
 
-    function beginChildren()
-    {
+    function beginChildren() {
         echo "<tr>";
     }
 
-    function endChildren()
-    {
+    function endChildren() {
         echo "</tr>" . "\n";
     }
 }
@@ -175,43 +178,57 @@ $username = "root";
 $password = "";
 $dbname = "clothingdatabase";
 
+try {
+    //$conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
+    //$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //$stmt = $conn->prepare("SELECT * FROM product");
+    //$stmt->execute();
 
-$query = $_GET['id'];
-$newTransactionID = 0;
+    //$result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
+    //foreach(new TableRows(new RecursiveArrayIterator($stmt->fetchAll())) as $k=>$v) {
+        //echo $v;
+    //}
+    $db = new mysqli($servername, $username, $password, $dbname);
 
-    try {
-        $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            echo "<div style='padding-left:16px; padding-bottom: 16px; padding-right: 16px'>
-                        <table style='border: solid 1px black;'>
-                </div>";
-        $stmt = $conn->prepare("SELECT * FROM cart");
-
-        if(!isset($_SESSION["currentTransactionID"]))
-        {
-            $newTransactionID = mt_rand(100000, 999999); //randomly generate 6-digit
-            $_SESSION["currentTransactionID"] = $newTransactionID;
-        }
-
-        
-        $stmt1 = $conn->prepare("INSERT INTO cart VALUES (" . $_SESSION["customerID"] . ", " . $_SESSION["currentTransactionID"] . ", $query)");
-
-        $stmt1->execute();
-        header("Location: cart.php");
-
-
-    } catch (PDOException $e) {
-        $msg = $e->getMessage();
-        if (strpos($msg, "Count <= 0")) {
-                echo "<div style='padding-left:16px; padding-right: 16px; padding-bottom: 16px'>
-                     <h2>Sorry, the product you are trying to add is currently out of stock.</h2></div>";
-                echo "<br>";
-                echo '<div style=\'padding-left:16px; padding-right: 16px; padding-bottom: 16px\'><a href="cart.php" class="loginbtn">Back to cart</a></div>';
-            }
+    $sql = "SELECT * from product";
+    if(!$result = $db->query($sql)){
+        die('There was an error running the query [' . $db->error . ']');
     }
+    echo "
+<table class='table'>
+    <thead>
+        <tr>";
 
+    while ($finfo = $result->fetch_field()) {
+        echo "
+        <th>" . $finfo->name . "</th>";
+    }
+    echo "
+        </tr>
+    </thead>
+    <tbody>";
+    while($row = $result->fetch_assoc()){
+        echo "<tr class='info'>
+                <td>" . $row['productID'] . "</td>
+                <td>" . $row['color'] . "</td>
+                <td>" . $row['price'] . "</td>
+                <td>" . $row['brandName'] . "</td>
+                <td>" . $row['name'] . "</td>
+                <td>" . $row['count'] . "</td>
+                <td><a class='btn btn-primary btn-lg'  href='purchase.php?id=".$row['productID']."'>Add to cart</a></td>
+                                </td>
+                                   </tr>";
+    }
+    echo "
+    </tbody>
+</table>";
+}
+catch(PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+$conn = null;
+echo "</table>";
 ?>
 
 </body>
